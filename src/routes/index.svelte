@@ -104,6 +104,12 @@
 		<label>Edit Mode <input type="checkbox" bind:checked={$editStore} /></label>
 		<!-- Prevents distortion when switching the edit mode -->
 		{#key $editStore}
+			{#if $editStore}
+				<div class="button-set">
+					<button on:click={() => onAddCode(0)}>Code +</button>
+					<button on:click={() => onAddText(0)}>Text +</button>
+				</div>
+			{/if}
 			{#each blocks as block, index (block.id)}
 				<div animate:flip={{ duration: 200 }}>
 					<BlockWrapper id={block.id} on:delete={onDelete}>
