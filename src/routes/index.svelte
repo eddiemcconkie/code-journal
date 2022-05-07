@@ -1,87 +1,91 @@
+<script context="module">
+	/** @type {import('./').Load} */
+	export const load = async ({ session }) => {
+		if (!session.loggedIn) {
+			return {
+				status: 307,
+				redirect: '/login'
+			};
+		}
+		return {};
+	};
+</script>
+
 <script>
+	import { onMount } from 'svelte';
+	import { load as loadData, save } from '$lib/storage';
+	import { signOut } from '$lib/auth';
+	import BlockWrapper from '$lib/BlockWrapper.svelte';
 	import CodeBlock from '$lib/CodeBlock.svelte';
 	import TextBlock from '$lib/TextBlock.svelte';
-
-	import { load, save } from '$lib/storage';
-	import { onMount } from 'svelte';
+	import { flip } from 'svelte/animate';
+	import { editStore } from '$lib/stores/edit';
 
 	let isMounted = false;
+
+	/** @typedef {{
+			id: string,
+			type: 'code' | 'text',
+			code?: string,
+			title?: string,
+			content?: string
+		 }} Block */
 
 	/** @type {Block[]} */
 	let blocks = [];
 
 	onMount(() => {
 		isMounted = true;
-		blocks = load('journal');
+		blocks = loadData('journal');
 	});
-
-	/** @typedef {{
-	 	id: string,
-		type: 'code' | 'text',
-		code?: string,
-		title?: string,
-		content?: string
-	 }} Block */
-
-	// /** @type {{
-	//  			id: string,
-	// 			type: 'code' | 'text',
-	// 			code?: string,
-	// 			title?: string,
-	// 			content?: string
-	// 		}[] } */
-
-	// /** @type {Block[]} */
-	// let blocks = [
-	// 	{
-	// 		id: '1',
-	// 		type: 'code',
-	// 		code: `
-	// function add(a, b) {
-	// 	return a + b;
-	// }
-
-	// function subtract(a, b) {
-	// 	return a - b;
-	// }
-
-	// let result = add(1, 2);
-	// 			`
-	// 	},
-	// 	{
-	// 		id: '2',
-	// 		type: 'text',
-	// 		title: 'Title',
-	// 		content: `This is very nice.`
-	// 	}
-	// ];
 
 	const components = {
 		code: CodeBlock,
 		text: TextBlock
 	};
 
-	const onAddCode = () => {
+	/** @type {(index: number)=>void} */
+	const onAddCode = (index) => {
 		blocks = [
-			...blocks,
+			...blocks.slice(0, index),
 			{
-				id: `${Math.floor(Math.random() * 1000)}`,
+				id: `${Math.floor(Math.random() * 100000000)}`,
 				type: 'code',
 				code: ``
-			}
+			},
+			...blocks.slice(index)
 		];
+		// blocks = [
+		// 	...blocks,
+		// 	{
+		// 		id: `${Math.floor(Math.random() * 1000)}`,
+		// 		type: 'code',
+		// 		code: ``
+		// 	}
+		// ];
 	};
 
-	const onAddText = () => {
+	/** @type {(index: number)=>void} */
+	const onAddText = (index) => {
 		blocks = [
-			...blocks,
+			...blocks.slice(0, index),
 			{
-				id: `${Math.floor(Math.random() * 1000)}`,
+				id: `${Math.floor(Math.random() * 100000000)}`,
 				type: 'text',
-				title: 'Title',
-				content: `Content`
-			}
+				title: '',
+				content: ''
+			},
+			...blocks.slice(index)
 		];
+		// blocks = [
+		// 	...blocks,
+		// 	{
+		// 		id: `${Math.floor(Math.random() * 1000)}`,
+		// 		type: 'text',
+		// 		title: '',
+		// 		content: ''
+		// 	}
+		// ];
 	};
 
 	const onDelete = (/** @type {{ detail: { id: string; }; }} */ event) => {
@@ -89,46 +93,39 @@
 		blocks = blocks.filter((block) => block.id !== id);
 	};
 
-	// const onUpdate = (/** @type {{ detail: Block }} */ event) => {
-	// 	blocks = blocks.map((block) => {
-	// 		if (block.id === event.detail.id) {
-	// 			console.log(event.detail);
-	// 			return { ...block, ...event.detail };
-	// 		}
-	// 		return block;
-	// 	});
-	// 	// const id = event.detail.id;
-	// 	// let block = blocks.find((block) => block.id === id);
-	// 	// if (block) {
-	// 	// 	block = {
-	// 	// 		...block,
-	// 	// 		...event.detail
-	// 	// 	};
-	// 	// }
-	// 	console.log(blocks);
-	// };
-	// $: console.log(blocks);
 	$: isMounted && save('journal', blocks);
+
+	// let editing = true;
+	// editStore
 </script>
 
 <div class="body">
 	<main class="track">
-		<!-- {#each blocks as block (block.id)}
-			{@const { type, ...props } = block}
-			<svelte:component
-				this={components[type]}
-				{...props}
-				on:update={onUpdate}
-				on:delete={onDelete}
-			/>
-		{/each} -->
-		{#each blocks as block (block.id)}
-			<svelte:component this={components[block.type]} bind:data={block} on:delete={onDelete} />
-		{/each}
-		<button on:click={onAddCode}>+ Code</button>
-		<button on:click={onAddText}>+ Text</button>
+		<label>Edit Mode <input type="checkbox" bind:checked={$editStore} /></label>
+		<!-- Prevents distortion when switching the edit mode -->
+		{#key $editStore}
+			{#each blocks as block, index (block.id)}
+				<div animate:flip={{ duration: 200 }}>
+					<BlockWrapper id={block.id} on:delete={onDelete}>
+						<svelte:component
+							this={components[block.type]}
+							bind:data={block}
+							on:delete={onDelete}
+						/>
+					</BlockWrapper>
+					{#if $editStore}
+						<div class="button-set">
+							<button on:click={() => onAddCode(index + 1)}>Code +</button>
+							<button on:click={() => onAddText(index + 1)}>Text +</button>
+						</div>
+					{/if}
+				</div>
+			{/each}
+		{/key}
 	</main>
 </div>
+
+<button on:click={signOut}>Sign Out</button>
 
 <style>
 	.track {
@@ -136,5 +133,38 @@
 		--margin: 1rem;
 		width: min(var(--max-width), 100% - var(--margin));
 		margin-inline: auto;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.button-set {
+		display: flex;
+		gap: 0.5rem;
+		margin-inline: auto;
+		justify-content: center;
+		/* padding-block: 0.5rem; */
+	}
+
+	button {
+		/* border: 2px solid hsl(258, 59%, 58%); */
+		border: 2px solid hsl(258, 59%, 58%);
+		/* color: white; */
+		color: hsl(258, 59%, 58%);
+		/* color: hsl(252, 40%, 68%); */
+		/* background-color: hsl(258, 59%, 58%); */
+		background-color: transparent;
+		/* padding: 0.5rem; */
+		border-radius: 0.5rem;
+		padding: 0.2em 0.6em;
+		font-weight: bold;
+		font-size: 1.1rem;
+		cursor: pointer;
+		transition: all 100ms ease-in-out;
+	}
+
+	button:hover {
+		color: white;
+		/* background-color: hsl(258, 59%, 58%); */
+		background-color: hsl(258, 59%, 58%);
 	}
 </style>
