@@ -23,15 +23,7 @@
 
 	let isMounted = false;
 
-	/** @typedef {{
-			id: string,
-			type: 'code' | 'text',
-			code?: string,
-			title?: string,
-			content?: string
-		 }} Block */
-
-	/** @type {Block[]} */
+	/** @type {import('../types').Block[]} */
 	let blocks = [];
 
 	onMount(() => {
@@ -44,28 +36,21 @@
 		text: TextBlock
 	};
 
-	/** @type {(index: number)=>void} */
+	/** @type {(index: number) => void} */
 	const onAddCode = (index) => {
 		blocks = [
 			...blocks.slice(0, index),
 			{
 				id: `${Math.floor(Math.random() * 100000000)}`,
 				type: 'code',
-				code: ``
+				code: '',
+				language: 'JavaScript'
 			},
 			...blocks.slice(index)
 		];
-		// blocks = [
-		// 	...blocks,
-		// 	{
-		// 		id: `${Math.floor(Math.random() * 1000)}`,
-		// 		type: 'code',
-		// 		code: ``
-		// 	}
-		// ];
 	};
 
-	/** @type {(index: number)=>void} */
+	/** @type {(index: number) => void} */
 	const onAddText = (index) => {
 		blocks = [
 			...blocks.slice(0, index),
@@ -77,26 +62,13 @@
 			},
 			...blocks.slice(index)
 		];
-		// blocks = [
-		// 	...blocks,
-		// 	{
-		// 		id: `${Math.floor(Math.random() * 1000)}`,
-		// 		type: 'text',
-		// 		title: '',
-		// 		content: ''
-		// 	}
-		// ];
 	};
 
-	const onDelete = (/** @type {{ detail: { id: string; }; }} */ event) => {
-		const id = event.detail.id;
+	const onDelete = (/** @type {string} */ id) => {
 		blocks = blocks.filter((block) => block.id !== id);
 	};
 
 	$: isMounted && save('journal', blocks);
-
-	// let editing = true;
-	// editStore
 </script>
 
 <div class="body">
@@ -112,12 +84,15 @@
 			{/if}
 			{#each blocks as block, index (block.id)}
 				<div animate:flip={{ duration: 200 }}>
-					<BlockWrapper id={block.id} on:delete={onDelete}>
-						<svelte:component
-							this={components[block.type]}
-							bind:data={block}
-							on:delete={onDelete}
-						/>
+					<BlockWrapper on:delete={() => onDelete(block.id)}>
+						<!-- Bit of a hack, but it will reload the component if the language changes -->
+						{#key block.language}
+							<svelte:component
+								this={components[block.type]}
+								bind:props={block}
+								on:delete={onDelete}
+							/>
+						{/key}
 					</BlockWrapper>
 					{#if $editStore}
 						<div class="button-set">
@@ -133,7 +108,7 @@
 
 <button on:click={signOut}>Sign Out</button>
 
-<style>
+<style lang="scss">
 	.track {
 		--max-width: 800px;
 		--margin: 1rem;
@@ -148,18 +123,12 @@
 		gap: 0.5rem;
 		margin-inline: auto;
 		justify-content: center;
-		/* padding-block: 0.5rem; */
 	}
 
 	button {
-		/* border: 2px solid hsl(258, 59%, 58%); */
-		border: 2px solid hsl(258, 59%, 58%);
-		/* color: white; */
-		color: hsl(258, 59%, 58%);
-		/* color: hsl(252, 40%, 68%); */
-		/* background-color: hsl(258, 59%, 58%); */
+		border: 2px solid $primary;
+		color: $primary;
 		background-color: transparent;
-		/* padding: 0.5rem; */
 		border-radius: 0.5rem;
 		padding: 0.2em 0.6em;
 		font-weight: bold;
@@ -169,8 +138,7 @@
 	}
 
 	button:hover {
-		color: white;
-		/* background-color: hsl(258, 59%, 58%); */
-		background-color: hsl(258, 59%, 58%);
+		color: hsl(240, 21%, 9%);
+		background-color: $primary;
 	}
 </style>

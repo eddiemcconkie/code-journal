@@ -2,19 +2,20 @@
 	import autosize from 'svelte-autosize';
 	import { editStore } from './stores/edit';
 
-	/** @type {{ id: string; title: string; content: string; }} */
-	export let data;
+	// /** @type {{ id: string; title: string; content: string; }} */
+	/** @type {import('../types').TextBlock} */
+	export let props;
 </script>
 
 <div class="container">
 	{#if $editStore}
-		<input bind:value={data.title} placeholder="Title" />
-		<textarea bind:value={data.content} use:autosize />
+		<input bind:value={props.title} placeholder="Title" />
+		<textarea bind:value={props.content} use:autosize />
 	{:else}
-		{#if data.title}
-			<h2>{data.title}</h2>
+		{#if props.title}
+			<h2>{props.title}</h2>
 		{/if}
-		<p>{data.content}</p>
+		<p>{props.content}</p>
 	{/if}
 </div>
 
@@ -33,9 +34,15 @@
 		padding: 0.5rem;
 		/* border: 2px solid hsl(250, 100%, 99%); */
 		/* border: 2px solid hsl(258, 100%, 98%); */
-		border-radius: 5px;
+		border-radius: 4px;
 		border: 0;
-		box-shadow: 0 0 5px hsl(258, 29%, 93%);
+		// box-shadow: 0 0 5px hsl(258, 29%, 93%);
+		color: #dbf4f7;
+		background-color: #445564;
+		// background-color: #30383f;
+		background-color: #1c252c;
+		border: 3px solid #191f24;
+		// border-radius: 4px;
 	}
 
 	input,
@@ -43,9 +50,14 @@
 		font-weight: bold;
 		font-size: 1.3rem;
 		color: hsl(258, 24%, 28%);
+		color: #dbf4f7;
 	}
 
 	textarea {
 		resize: none;
+	}
+
+	p {
+		color: #dbf4f7;
 	}
 </style>

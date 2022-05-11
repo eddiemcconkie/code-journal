@@ -2,8 +2,6 @@
 	import { createEventDispatcher } from 'svelte';
 	import { editStore } from './stores/edit';
 
-	export let id = '';
-
 	const dispatch = createEventDispatcher();
 </script>
 
@@ -13,21 +11,18 @@
 	</div>
 	{#if $editStore}
 		<div class="side">
-			<button on:click={() => dispatch('delete', { id })}>X</button>
+			<button on:click={() => dispatch('delete')}>X</button>
 		</div>
 	{/if}
 </div>
 
-<style>
+<style lang="scss">
 	.container {
 		display: flex;
 		gap: 1rem;
-		/* border: 3px solid hsl(252, 40%, 68%); */
-		border: 3px solid hsl(249, 31%, 88%);
 		border-radius: 0.5rem;
 		padding: 1rem;
-		/* margin-bottom: 1rem; */
-		background-color: hsl(250, 100%, 99%);
+		background-color: hsl(207, 23%, 16%);
 		margin-block: 0.5rem;
 	}
 	.content {
@@ -35,14 +30,9 @@
 	}
 
 	button {
-		/* border: 2px solid hsl(258, 59%, 58%); */
-		border: 2px solid hsl(258, 59%, 58%);
-		/* color: white; */
-		color: hsl(258, 59%, 58%);
-		/* color: hsl(252, 40%, 68%); */
-		/* background-color: hsl(258, 59%, 58%); */
+		border: 2px solid $warning;
+		color: $warning;
 		background-color: transparent;
-		/* padding: 0.5rem; */
 		border-radius: 0.5rem;
 		display: grid;
 		place-items: center;
@@ -54,8 +44,7 @@
 	}
 
 	button:hover {
-		color: white;
-		/* background-color: hsl(258, 59%, 58%); */
-		background-color: hsl(258, 59%, 58%);
+		color: hsl(240, 21%, 9%);
+		background-color: $warning;
 	}
 </style>
