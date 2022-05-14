@@ -1,21 +1,27 @@
 <script>
 	import autosize from 'svelte-autosize';
+	import DeleteButton from './DeleteButton.svelte';
 	import { editStore } from './stores/edit';
 
-	// /** @type {{ id: string; title: string; content: string; }} */
 	/** @type {import('../types').TextBlock} */
 	export let props;
 </script>
 
 <div class="container">
 	{#if $editStore}
-		<input bind:value={props.title} placeholder="Title" />
+		<div class="_space-between">
+			<input bind:value={props.title} placeholder="Title" />
+			<DeleteButton on:delete />
+		</div>
 		<textarea bind:value={props.content} use:autosize />
 	{:else}
 		{#if props.title}
 			<h2>{props.title}</h2>
 		{/if}
-		<p>{props.content}</p>
+		<!-- Split the content into paragraphs and filter out any potential empty lines -->
+		{#each props.content.split(/\n+/).filter((p) => p.trim() !== '') as paragraph}
+			<p>{paragraph}</p>
+		{/each}
 	{/if}
 </div>
 
@@ -37,20 +43,29 @@
 		border-radius: 4px;
 		border: 0;
 		// box-shadow: 0 0 5px hsl(258, 29%, 93%);
-		color: #dbf4f7;
+		color: #b7c5d3;
+		// color: #dbf4f7;
 		background-color: #445564;
 		// background-color: #30383f;
 		background-color: #1c252c;
-		border: 3px solid #191f24;
+		// border: 3px solid #191f24;
 		// border-radius: 4px;
+	}
+
+	input {
+		flex: 1;
+	}
+
+	._space-between {
+		--gap: 1.5rem;
 	}
 
 	input,
 	h2 {
 		font-weight: bold;
 		font-size: 1.3rem;
-		color: hsl(258, 24%, 28%);
-		color: #dbf4f7;
+		// color: #dbf4f7;
+		color: #b7c5d3;
 	}
 
 	textarea {
@@ -58,6 +73,7 @@
 	}
 
 	p {
-		color: #dbf4f7;
+		// color: #dbf4f7;
+		color: #b7c5d3;
 	}
 </style>

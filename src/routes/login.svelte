@@ -16,3 +16,10 @@
 </script>
 
 <button on:click={signInWithGithub}>Sign In with GitHub</button>
+<a href="/guest">Continue As Guest</a>
+
+<style>
+	a {
+		color: white;
+	}
+</style>
