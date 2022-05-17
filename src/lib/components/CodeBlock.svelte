@@ -17,13 +17,15 @@
 	import { sql } from '@codemirror/lang-sql';
 
 	// import { oneDark } from '@codemirror/theme-one-dark';
+	import { createEventDispatcher, onMount } from 'svelte';
 	import { oneDark } from '$lib/codemirror-styles';
-	import { onMount } from 'svelte';
-	import { editStore } from './stores/edit';
-	import DeleteButton from './DeleteButton.svelte';
+	import { editStore } from '$lib/stores/edit';
+	import DeleteButton from '$lib/components/DeleteButton.svelte';
 
-	/** @type {import('../types').CodeBlock} */
+	/** @type {import('src/types').CodeBlock} */
 	export let props;
+
+	const dispatch = createEventDispatcher();
 
 	/** @type {HTMLElement} */
 	let parent;
@@ -69,6 +71,7 @@
 			state,
 			parent
 		});
+		view.contentDOM.addEventListener('blur', () => dispatch('update'));
 	});
 
 	// @ts-ignore

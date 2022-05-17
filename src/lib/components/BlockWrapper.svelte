@@ -1,5 +1,5 @@
 <script>
-	import { editStore } from './stores/edit';
+	import { editStore } from '$lib/stores/edit';
 </script>
 
 {#if $editStore}

@@ -1,3 +1,5 @@
+import type { Timestamp } from 'firebase/firestore';
+
 interface BaseBlock {
 	id: string;
 	type: string;
@@ -17,14 +19,15 @@ export interface TextBlock extends BaseBlock {
 
 export type Block = CodeBlock | TextBlock;
 
-export interface Stack {
+export interface Entry {
 	id: string;
-	name: string;
+	title: string;
 	blocks: Block[];
-	group: string;
+	groupId: string;
 	favorite: boolean;
-	createdAt: string;
-	updatedAt: string;
+	// createdAt: string;
+	createdAt: Timestamp;
+	updatedAt: Timestamp;
 	tags: string[];
 	links: string[];
 }

@@ -10,7 +10,7 @@ const config = {
 			css: {
 				preprocessorOptions: {
 					scss: {
-						additionalData: '@use "../styles/variables.scss" as *;'
+						additionalData: '@use "src/styles/variables.scss" as *;'
 					}
 				}
 			}
@@ -20,7 +20,7 @@ const config = {
 	preprocess: [
 		preprocess({
 			scss: {
-				prependData: '@use "../styles/variables.scss" as *;'
+				prependData: '@use "src/styles/variables.scss" as *;'
 			}
 		})
 	]

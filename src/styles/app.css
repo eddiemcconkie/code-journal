@@ -4,6 +4,7 @@ body {
 	background-color: #121216;
 	/* background-color: #467696; */
 	font-family: Lato, sans-serif;
+	color: white;
 }
 
 ._space-between {
@@ -13,4 +14,15 @@ body {
 
 	--gap: 1rem;
 	gap: var(--gap);
+}
+
+._button {
+	background-color: #13131d;
+	border: none;
+	color: white;
+	padding: 1rem;
+	border-radius: 5px;
+	font-size: 1.2rem;
+	cursor: pointer;
+	transition: all 0.2s ease-in-out;
 }

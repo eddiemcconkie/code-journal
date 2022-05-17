@@ -1,19 +1,22 @@
 <script>
+	import { createEventDispatcher } from 'svelte';
 	import autosize from 'svelte-autosize';
-	import DeleteButton from './DeleteButton.svelte';
-	import { editStore } from './stores/edit';
 
-	/** @type {import('../types').TextBlock} */
+	import DeleteButton from '$lib/components/DeleteButton.svelte';
+	import { editStore } from '$lib/stores/edit';
+
+	/** @type {import('src/types').TextBlock} */
 	export let props;
+	const dispatch = createEventDispatcher();
 </script>
 
 <div class="container">
 	{#if $editStore}
 		<div class="_space-between">
-			<input bind:value={props.title} placeholder="Title" />
+			<input bind:value={props.title} placeholder="Title" on:blur={() => dispatch('update')} />
 			<DeleteButton on:delete />
 		</div>
-		<textarea bind:value={props.content} use:autosize />
+		<textarea bind:value={props.content} use:autosize on:blur={() => dispatch('update')} />
 	{:else}
 		{#if props.title}
 			<h2>{props.title}</h2>

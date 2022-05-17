@@ -1,23 +1,29 @@
 <script>
-	import { onMount } from 'svelte';
-	import { loadData, saveData } from '$lib/storage';
-	import { signOut } from '$lib/auth';
-	import BlockWrapper from '$lib/BlockWrapper.svelte';
-	import CodeBlock from '$lib/CodeBlock.svelte';
-	import TextBlock from '$lib/TextBlock.svelte';
+	import { createEventDispatcher } from 'svelte';
+
+	import BlockWrapper from '$lib/components/BlockWrapper.svelte';
+	import CodeBlock from '$lib/components/CodeBlock.svelte';
+	import TextBlock from '$lib/components/TextBlock.svelte';
 	import { flip } from 'svelte/animate';
 	import { editStore } from '$lib/stores/edit';
+	import { beforeNavigate } from '$app/navigation';
 
 	let isMounted = false;
 
 	// let blocks = [];
-	/** @type {import('../types').Block[]} */
-	export let blocks;
+	// /** @type {import('src/types').Block[]} */
+	/** @type {import('src/types').Entry} */
+	export let entry;
 
 	// onMount(() => {
 	// 	isMounted = true;
 	// 	blocks = loadData('journal');
 	// });
+
+	const dispatch = createEventDispatcher();
+	beforeNavigate(() => {
+		dispatch('update', entry);
+	});
 
 	const componentsMap = {
 		code: CodeBlock,
@@ -26,46 +32,55 @@
 
 	/** @type {(index: number) => void} */
 	const onAddCode = (index) => {
-		blocks = [
-			...blocks.slice(0, index),
+		dispatch('update', entry);
+		entry.blocks = [
+			...entry.blocks.slice(0, index),
 			{
 				id: `${Math.floor(Math.random() * 100000000)}`,
 				type: 'code',
 				code: '',
 				language: 'JavaScript'
 			},
-			...blocks.slice(index)
+			...entry.blocks.slice(index)
 		];
 	};
 
 	/** @type {(index: number) => void} */
 	const onAddText = (index) => {
-		blocks = [
-			...blocks.slice(0, index),
+		dispatch('update', entry);
+		entry.blocks = [
+			...entry.blocks.slice(0, index),
 			{
 				id: `${Math.floor(Math.random() * 100000000)}`,
 				type: 'text',
 				title: '',
 				content: ''
 			},
-			...blocks.slice(index)
+			...entry.blocks.slice(index)
 		];
 	};
 
 	const onDelete = (/** @type {string} */ id) => {
-		blocks = blocks.filter((block) => block.id !== id);
+		dispatch('update', entry);
+		entry.blocks = entry.blocks.filter((block) => block.id !== id);
 	};
 
 	// $: isMounted && saveData('journal', blocks);
+	// onMount(() => {
+	// 	setInterval(() => dispatch('update', entry), 60 * 1000);
+	// });
 </script>
 
 <!-- <div class="body"> -->
-<header class="_space-between">
-	<h1>Code Journal</h1>
-	<label><input type="checkbox" bind:checked={$editStore} /> Edit Mode</label>
-	<button on:click={signOut}>Sign Out</button>
-</header>
+
 <main class="track" class:editing={$editStore}>
+	<BlockWrapper>
+		{#if $editStore}
+			<input type="text" bind:value={entry.title} on:blur={() => dispatch('update', entry)} />
+		{:else}
+			<h2>{entry.title}</h2>
+		{/if}
+	</BlockWrapper>
 	<!-- Prevents distortion when switching the edit mode -->
 	{#key $editStore}
 		{#if $editStore}
@@ -74,7 +89,7 @@
 				<button on:click={() => onAddText(0)}>Text +</button>
 			</div>
 		{/if}
-		{#each blocks as block, index (block.id)}
+		{#each entry.blocks as block, index (block.id)}
 			<div animate:flip={{ duration: 200 }}>
 				<!-- <BlockWrapper on:delete={() => onDelete(block.id)}> -->
 				<BlockWrapper>
@@ -82,6 +97,7 @@
 						this={componentsMap[block.type]}
 						bind:props={block}
 						on:delete={() => onDelete(block.id)}
+						on:update={() => dispatch('update', entry)}
 					/>
 					<!-- on:delete={onDelete} -->
 				</BlockWrapper>
@@ -98,16 +114,6 @@
 
 <!-- </div> -->
 <style lang="scss">
-	header {
-		padding: 0.3rem 3rem;
-		color: #b7c5d3;
-		background-color: #252e36;
-		border-bottom: 2px solid #12181c;
-		position: sticky;
-		top: 0;
-		z-index: 100;
-	}
-
 	.track {
 		--max-width: 800px;
 		--margin: 1rem;
