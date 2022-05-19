@@ -1,0 +1,4 @@
+{
+	"cssvar.files": ["node_modules/open-props/open-props.min.css", "node_modules.open-props/normalize.min.css"],
+	"cssvar.extensions": ["css", "scss", "html", "jsx", "tsx", "svelte" ]
+}

@@ -16,7 +16,6 @@
 	import { python } from '@codemirror/lang-python';
 	import { sql } from '@codemirror/lang-sql';
 
-	// import { oneDark } from '@codemirror/theme-one-dark';
 	import { createEventDispatcher, onMount } from 'svelte';
 	import { oneDark } from '$lib/codemirror-styles';
 	import { editStore } from '$lib/stores/edit';
@@ -128,11 +127,8 @@
 	</div>
 </div>
 
-<style>
+<style lang="scss">
 	.container {
-		/* background-color: white; */
-		/* box-shadow: 0 0 10px hsl(258, 29%, 93%); */
-		/* border: 3px solid #191f24; */
 		overflow: hidden;
 		border-radius: 5px;
 		position: relative;
@@ -145,7 +141,6 @@
 		padding: 5px 10px;
 		border: 0;
 		border-radius: 5px;
-		/* background-color: #191f24; */
 		background-color: hsl(210, 19%, 10%);
 		color: white;
 		cursor: pointer;
@@ -160,7 +155,6 @@
 
 	select {
 		color-scheme: dark;
-		/* margin-bottom: 1rem; */
 	}
 
 	._space-between {
@@ -168,10 +162,8 @@
 	}
 
 	p {
-		/* color: #89a9ac; */
-		color: #6b8c8f;
+		color: $text-dark;
 		font-weight: bold;
 		font-size: 0.9rem;
-		/* margin-top: 1rem; */
 	}
 </style>

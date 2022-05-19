@@ -38,21 +38,11 @@
 
 	input,
 	textarea {
-		/* display: block; */
-		/* width: 100%; */
 		padding: 0.5rem;
-		/* border: 2px solid hsl(250, 100%, 99%); */
-		/* border: 2px solid hsl(258, 100%, 98%); */
 		border-radius: 4px;
 		border: 0;
-		// box-shadow: 0 0 5px hsl(258, 29%, 93%);
-		color: #b7c5d3;
-		// color: #dbf4f7;
-		background-color: #445564;
-		// background-color: #30383f;
-		background-color: #1c252c;
-		// border: 3px solid #191f24;
-		// border-radius: 4px;
+		color: $text-light;
+		background-color: $gray-700;
 	}
 
 	input {
@@ -67,8 +57,7 @@
 	h2 {
 		font-weight: bold;
 		font-size: 1.3rem;
-		// color: #dbf4f7;
-		color: #b7c5d3;
+		color: $text-light;
 	}
 
 	textarea {
@@ -76,7 +65,6 @@
 	}
 
 	p {
-		// color: #dbf4f7;
-		color: #b7c5d3;
+		color: $text-light;
 	}
 </style>
