@@ -13,10 +13,15 @@
 <div class="container">
 	{#if $editStore}
 		<div class="_space-between">
-			<input bind:value={props.title} placeholder="Title" on:blur={() => dispatch('update')} />
+			<input
+				bind:value={props.title}
+				on:blur={() => dispatch('update')}
+				type="text"
+				placeholder="Title"
+			/>
 			<DeleteButton on:delete />
 		</div>
-		<textarea bind:value={props.content} use:autosize on:blur={() => dispatch('update')} />
+		<textarea bind:value={props.content} on:blur={() => dispatch('update')} use:autosize />
 	{:else}
 		{#if props.title}
 			<h2>{props.title}</h2>
@@ -42,7 +47,7 @@
 		border-radius: 4px;
 		border: 0;
 		color: $text-light;
-		background-color: $gray-700;
+		// background-color: $gray-700;
 	}
 
 	input {

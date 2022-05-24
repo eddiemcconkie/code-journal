@@ -1,10 +1,21 @@
 @import 'open-props/style';
 @import 'open-props/normalize';
+@import 'open-props/colors-hsl';
+
+html {
+	// --link: var(--blue-4);
+	accent-color: var(--blue-2);
+}
+
+.cm-cursor {
+	/* Something about OP normalize makes the cursor look weird */
+	border-width: 0 0 0 2px !important;
+}
 
 body {
 	/* background-color: #13131d; */
 	/* background-color: #121212; */
-	background-color: $gray-900;
+	background-color: $slate-900;
 	/* background-color: #467696; */
 	font-family: Lato, sans-serif;
 	color: white;
@@ -13,6 +24,7 @@ body {
 input[type='text'],
 textarea {
 	width: 100%;
+	background-color: $slate-700;
 	/* Open Props overrides this apparently */
 	cursor: text;
 }

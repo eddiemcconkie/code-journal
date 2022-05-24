@@ -18,8 +18,8 @@
 	header {
 		padding: 0.2rem 3rem;
 		color: $text-light;
-		background-color: $gray-600;
-		border-bottom: 2px solid $gray-950;
+		background-color: $slate-600;
+		border-bottom: 2px solid $slate-950;
 		position: sticky;
 		top: 0;
 		z-index: 100;

@@ -11,8 +11,8 @@
 		border-radius: 0.5rem;
 		margin-block: 0.5rem;
 		padding: 1rem;
-		background-color: $gray-800;
-
+		background-color: $slate-800;
+		// background-color: var(--gray-9);
 		&:not(.editing) {
 			display: contents;
 		}
