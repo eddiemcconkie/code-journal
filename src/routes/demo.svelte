@@ -12,7 +12,7 @@
 		id: '',
 		title: '',
 		blocks: [],
-		groupId: '',
+		group: '',
 		favorite: false,
 		createdAt: Timestamp.now(),
 		updatedAt: Timestamp.now(),

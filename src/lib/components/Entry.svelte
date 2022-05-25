@@ -89,12 +89,11 @@
 		{/if}
 		<div class="tags" class:empty={entry.tags.length === 0}>
 			{#each entry.tags as tag}
-				<span>
-					#{tag}
-					{#if $editStore}
-						<button on:click={() => onDeleteTag(tag)} />
-					{/if}
-				</span>
+				{#if $editStore}
+					<span>#{tag} <button on:click={() => onDeleteTag(tag)} /></span>
+				{:else}
+					<span><a href={`/tags?name=${tag}`}>#{tag}</a></span>
+				{/if}
 			{/each}
 			{#if $editStore}
 				<form on:submit|preventDefault={onAddTag}>
@@ -205,6 +204,14 @@
 				border-radius: var(--radius-round);
 				background-color: var(--gray-9);
 				background-color: var(--blue-0);
+			}
+
+			a {
+				color: white;
+				&:hover,
+				&:focus-visible {
+					text-decoration: underline solid white;
+				}
 			}
 		}
 

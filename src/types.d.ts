@@ -23,7 +23,7 @@ export interface Entry {
 	id: string;
 	title: string;
 	blocks: Block[];
-	groupId: string;
+	group: string;
 	favorite: boolean;
 	// createdAt: string;
 	createdAt: Timestamp;
