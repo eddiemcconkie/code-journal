@@ -5,7 +5,6 @@ import { db } from '$lib/firebase';
 
 /** @type {import('svelte/store').Readable<import('src/types').Entry[]>} */
 export const entryStore = derived(userStore, ($user, set) => {
-	console.log('entryStore updated');
 	if ($user) {
 		const unsubscribe = onSnapshot(
 			query(collection(db, `users/${$user.uid}/entries`)),

@@ -1,6 +1,7 @@
 import { derived } from 'svelte/store';
 import { entryStore } from '$lib/stores/entry';
 
+/** @type {import('svelte/store').Readable<string[]>} */
 export const groupStore = derived(entryStore, ($entryStore) =>
 	$entryStore.reduce((/** @type {string[]} */ acc, entry) => {
 		if (entry.group.trim() !== '' && !acc.includes(entry.group)) {

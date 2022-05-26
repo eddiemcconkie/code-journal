@@ -1,6 +1,6 @@
 <script>
 	import '../styles/modern-css-reset.css';
-	import '../styles/app.scss';
+	import '../styles/app.css';
 	import { auth } from '$lib/firebase';
 	import { userStore } from '$lib/stores/user';
 	import Header from '$lib/components/Header.svelte';
@@ -13,6 +13,10 @@
 	// Stay subbed globally to the list of entries
 	$entryStore;
 </script>
+
+<svelte:head>
+	<title>Code Journal</title>
+</svelte:head>
 
 <Header />
 <slot />

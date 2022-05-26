@@ -12,7 +12,7 @@
 
 <div class="container">
 	{#if $editStore}
-		<div class="_space-between">
+		<div class="space-between">
 			<input
 				bind:value={props.title}
 				on:blur={() => dispatch('update')}
@@ -24,7 +24,7 @@
 		<textarea bind:value={props.content} on:blur={() => dispatch('update')} use:autosize />
 	{:else}
 		{#if props.title}
-			<h2>{props.title}</h2>
+			<h3>{props.title}</h3>
 		{/if}
 		<!-- Split the content into paragraphs and filter out any potential empty lines -->
 		{#each props.content.split(/\n+/).filter((p) => p.trim() !== '') as paragraph}
@@ -46,7 +46,7 @@
 		padding: 0.5rem;
 		border-radius: 4px;
 		border: 0;
-		color: $text-light;
+		// color: $text-light;
 		// background-color: $gray-700;
 	}
 
@@ -54,7 +54,7 @@
 		flex: 1;
 	}
 
-	._space-between {
+	.space-between {
 		--gap: 1.5rem;
 	}
 
@@ -62,14 +62,15 @@
 	h2 {
 		font-weight: bold;
 		font-size: 1.3rem;
-		color: $text-light;
+		// color: $text-light;
 	}
 
 	textarea {
 		resize: none;
 	}
 
+	h3,
 	p {
-		color: $text-light;
+		color: var(--slate-9);
 	}
 </style>

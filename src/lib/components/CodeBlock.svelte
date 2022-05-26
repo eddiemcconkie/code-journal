@@ -20,6 +20,7 @@
 	import { oneDark } from '$lib/codemirror-styles';
 	import { editStore } from '$lib/stores/edit';
 	import DeleteButton from '$lib/components/DeleteButton.svelte';
+	import CopyIcon from '$lib/icons/CopyIcon.svelte';
 
 	/** @type {import('src/types').CodeBlock} */
 	export let props;
@@ -96,7 +97,7 @@
 
 <div>
 	{#if $editStore}
-		<div class="_space-between">
+		<div class="space-between">
 			<select bind:value={props.language}>
 				<option>JavaScript</option>
 				<option>HTML</option>
@@ -120,7 +121,8 @@
 				{#if copied}
 					Copied!
 				{:else}
-					Copy
+					<CopyIcon />
+					&nbsp;Copy
 				{/if}
 			</button>
 		{/if}
@@ -145,6 +147,10 @@
 		color: white;
 		cursor: pointer;
 		z-index: 1;
+
+		> :global(svg) {
+			display: inline-block;
+		}
 	}
 
 	/* Only show the hover state if the code has not been copied yet */
@@ -153,16 +159,12 @@
 		background-color: #28313a;
 	}
 
-	select {
-		color-scheme: dark;
-	}
-
-	._space-between {
+	.space-between {
 		margin-bottom: 1rem;
 	}
 
 	p {
-		color: $text-dark;
+		color: var(--slate-6);
 		font-weight: bold;
 		font-size: 0.9rem;
 	}

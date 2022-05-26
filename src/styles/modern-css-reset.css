@@ -2,7 +2,7 @@
 *,
 ::after,
 ::before {
-  box-sizing: border-box;
+	box-sizing: border-box;
 }
 blockquote,
 body,
@@ -14,44 +14,44 @@ h2,
 h3,
 h4,
 p {
-  margin: 0;
+	margin: 0;
 }
 ol[role='list'],
 ul[role='list'] {
-  list-style: none;
+	list-style: none;
 }
 html:focus-within {
-  scroll-behavior: smooth;
+	scroll-behavior: smooth;
 }
 body {
-  min-height: 100vh;
-  text-rendering: optimizeSpeed;
-  line-height: 1.5;
+	min-height: 100vh;
+	text-rendering: optimizeSpeed;
+	line-height: 1.5;
 }
 a:not([class]) {
-  text-decoration-skip-ink: auto;
+	text-decoration-skip-ink: auto;
 }
 img,
 picture {
-  max-width: 100%;
-  display: block;
+	max-width: 100%;
+	display: block;
 }
 button,
 input,
 select,
 textarea {
-  font: inherit;
+	font: inherit;
 }
 @media (prefers-reduced-motion: reduce) {
-  html:focus-within {
-    scroll-behavior: auto;
-  }
-  *,
-  ::after,
-  ::before {
-    animation-duration: 0s !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0s !important;
-    scroll-behavior: auto !important;
-  }
+	html:focus-within {
+		scroll-behavior: auto;
+	}
+	*,
+	::after,
+	::before {
+		animation-duration: 0s !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0s !important;
+		scroll-behavior: auto !important;
+	}
 }
