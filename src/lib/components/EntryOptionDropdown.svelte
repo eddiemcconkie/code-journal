@@ -2,13 +2,11 @@
 	import { createEventDispatcher } from 'svelte';
 
 	import Dropdown from '$lib/components/Dropdown.svelte';
-	import CaretIcon from '$lib/icons/CaretIcon.svelte';
 	import PenIcon from '$lib/icons/PenIcon.svelte';
 	import TrashIcon from '$lib/icons/TrashIcon.svelte';
 	import { goto } from '$app/navigation';
-	import StarIcon from '$lib/icons/StarIcon.svelte';
-	import { toggleFavorite } from '$lib/firebase/db';
 	import GroupIcon from '$lib/icons/GroupIcon.svelte';
+	import EllipsisIcon from '$lib/icons/EllipsisIcon.svelte';
 
 	/** @type {import('src/types').Entry} */
 	export let entry;
@@ -17,8 +15,8 @@
 </script>
 
 <Dropdown>
-	<span slot="button" let:open class="text-dark">
-		<CaretIcon down={!open} />
+	<span slot="button" class="text-dark">
+		<EllipsisIcon />
 	</span>
 
 	<ul slot="dropdown" class="select-list">

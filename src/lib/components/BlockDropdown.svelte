@@ -2,9 +2,9 @@
 	import { createEventDispatcher } from 'svelte';
 
 	import Dropdown from '$lib/components/Dropdown.svelte';
-	import CaretIcon from '$lib/icons/CaretIcon.svelte';
 	import TrashIcon from '$lib/icons/TrashIcon.svelte';
 	import ArrowIcon from '$lib/icons/ArrowIcon.svelte';
+	import EllipsisIcon from '$lib/icons/EllipsisIcon.svelte';
 
 	/** @type {boolean} */
 	export let first;
@@ -15,8 +15,8 @@
 </script>
 
 <Dropdown>
-	<span slot="button" let:open class="text-dark">
-		<CaretIcon down={!open} />
+	<span slot="button" class="text-dark">
+		<EllipsisIcon />
 	</span>
 
 	<ul slot="dropdown" class="select-list">

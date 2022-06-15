@@ -5,8 +5,6 @@
 	import { entryStore } from '$lib/stores/entry';
 	import { flip } from 'svelte/animate';
 	import StarIcon from '$lib/icons/StarIcon.svelte';
-	import AlphaIcon from '$lib/icons/AlphaIcon.svelte';
-	import ClockIcon from '$lib/icons/ClockIcon.svelte';
 	import EntryListDropdown from './EntryListDropdown.svelte';
 	import SortControls from './SortControls.svelte';
 
@@ -136,11 +134,8 @@
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
-
-		> em {
-			// Prevents clipping of italic text from overlow: hidden
-			padding-right: var(--size-1);
-		}
+		// Prevents a bit of clipping from overlow: hidden
+		padding-right: var(--size-1);
 	}
 
 	.entry-icon {
@@ -155,7 +150,7 @@
 		min-width: var(--size-10);
 		text-align: end;
 
-		// var(--size-sm)
+		// 480px = var(--size-sm)
 		@media screen and (max-width: 480px) {
 			display: none;
 		}
