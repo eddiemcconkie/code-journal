@@ -1,3 +1,5 @@
+@use 'utility';
+@use 'block';
 @import 'open-props/style';
 @import 'open-props/normalize';
 /* @import 'open-props/colors-hsl'; */
@@ -24,16 +26,11 @@ html {
 }
 
 .cm-cursor {
-	/* Something about OP normalize makes the cursor look weird */
+	/* Something about Open Props normalize makes the cursor look weird */
 	border-width: 0 0 0 2px !important;
 }
 
 body {
-	/* background-color: #13131d; */
-	/* background-color: #121212; */
-	/* background-color: $slate-900; */
-	/* background-color: #467696; */
-	/* background-color: var(--slate-2); */
 	background-color: var(--gray-2);
 	font-family: Lato, sans-serif;
 	color: white;
@@ -42,6 +39,7 @@ body {
 input[type='text'],
 textarea {
 	width: 100%;
+	caret-color: var(--cyan-8);
 	/* Open Props overrides this apparently */
 	cursor: text;
 }
@@ -54,77 +52,57 @@ select {
 	box-shadow: var(--shadow-1);
 }
 
-.space-between {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-
-	--gap: 1rem;
-	gap: var(--gap);
-}
-
 .button {
 	background-color: var(--slate-2);
 	color: var(--text-dark);
 	font-weight: bold;
 	border-radius: var(--radius-2);
+	text-decoration: none;
 }
 .button:hover,
 .button:focus-visible {
 	background-color: var(--slate-1);
 }
 
-.primary {
-	/* padding: var(--size-fluid-1) var(--size-fluid-2); */
+.button[data-type='primary'] {
 	padding: var(--size-2) var(--size-4);
 	background-color: var(--cyan-9);
-	/* color: var(--text-light); */
 	color: white;
 	box-shadow: var(--shadow-2);
 
 	transition: transform 200ms var(--ease-5);
-}
-.primary:hover,
-.primary:focus-visible {
-	background-color: var(--cyan-8);
-	transform: scale(1.1);
-}
-.primary:disabled {
-	background-color: var(--slate-2);
+
+	&:hover,
+	&:focus-visible {
+		background-color: var(--cyan-8);
+		transform: scale(1.1);
+	}
+
+	&:disabled {
+		background-color: var(--slate-2);
+	}
 }
 
-.icon {
+.button[data-type='dropdown'] {
 	background-color: transparent;
-	transition: transform 200ms var(--ease-5);
 }
-
-.icon:hover,
-.icon:focus-visible {
-	transform: scale(1.5);
-}
-
-/* .button {
-	background-color: #13131d;
-	border: none;
-	color: white;
-	padding: 0.2rem 1rem;
-	border-radius: 5px;
-	font-size: 1.2rem;
-	cursor: pointer;
-	transition: all 0.2s ease-in-out;
-} */
 
 h1,
 h2,
 h3 {
 	color: var(--slate-0);
-	/* color: var(--slate-9); */
 }
 
 a {
-	text-decoration-color: var(--cyan-3);
+	text-decoration-color: currentColor;
 }
 
-/* :focus {
-	outline: none;
-} */
+ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+li {
+	padding: 0;
+}

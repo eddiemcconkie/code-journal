@@ -35,6 +35,7 @@
 
 	main {
 		flex: 1 1 500px;
+		min-width: 0;
 		background-color: #fff;
 		padding: var(--size-fluid-2);
 		display: flex;

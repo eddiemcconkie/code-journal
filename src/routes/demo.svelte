@@ -9,7 +9,7 @@
 
 	/** @type {import('src/types').Entry} */
 	let entry = {
-		id: '',
+		id: 'demo',
 		title: '',
 		blocks: [],
 		group: '',

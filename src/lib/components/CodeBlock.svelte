@@ -19,11 +19,16 @@
 	import { createEventDispatcher, onMount } from 'svelte';
 	import { oneDark } from '$lib/codemirror-styles';
 	import { editStore } from '$lib/stores/edit';
-	import DeleteButton from '$lib/components/DeleteButton.svelte';
 	import CopyIcon from '$lib/icons/CopyIcon.svelte';
+	import BlockDropdown from './BlockDropdown.svelte';
 
 	/** @type {import('src/types').CodeBlock} */
 	export let props;
+
+	/** @type {boolean} */
+	export let first;
+	/** @type {boolean} */
+	export let last;
 
 	const dispatch = createEventDispatcher();
 
@@ -110,7 +115,8 @@
 				<option>JSON</option>
 				<option>Markdown</option>
 			</select>
-			<DeleteButton on:delete />
+			<BlockDropdown {first} {last} on:moveup on:movedown on:delete />
+			<!-- <BlockDropdown {first} {last} on:moveup on:movedown /> -->
 		</div>
 	{:else}
 		<p>{props.language}</p>
@@ -146,7 +152,7 @@
 		background-color: hsl(210, 19%, 10%);
 		color: white;
 		cursor: pointer;
-		z-index: 1;
+		z-index: var(--layer-1);
 
 		> :global(svg) {
 			display: inline-block;

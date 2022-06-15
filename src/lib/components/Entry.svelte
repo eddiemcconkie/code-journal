@@ -1,5 +1,5 @@
 <script>
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher, onMount } from 'svelte';
 	import { v4 as uuidv4 } from 'uuid';
 
 	import BlockWrapper from '$lib/components/BlockWrapper.svelte';
@@ -7,9 +7,13 @@
 	import TextBlock from '$lib/components/TextBlock.svelte';
 	import { flip } from 'svelte/animate';
 	import { editStore } from '$lib/stores/edit';
-	import { beforeNavigate } from '$app/navigation';
-	import CloseIcon from '$lib/icons/CloseIcon.svelte';
+	import { beforeNavigate, goto } from '$app/navigation';
 	import TagEdit from './TagEdit.svelte';
+	import EntryOptionDropdown from './EntryOptionDropdown.svelte';
+	import { deleteEntry } from '$lib/firebase/db';
+
+	/** @typedef {import('src/types').CodeBlock} CodeBlock */
+	/** @typedef {import('src/types').TextBlock} TextBlock */
 
 	/** @type {import('src/types').Entry} */
 	export let entry;
@@ -25,9 +29,9 @@
 		text: TextBlock
 	};
 
-	/** @type {(index: number) => void} */
+	/** @param {number} index */
 	const onAddCode = (index) => {
-		/** @type {import('src/types').CodeBlock} */
+		/** @type {CodeBlock} */
 		const newBlock = {
 			id: uuidv4(),
 			type: 'code',
@@ -38,9 +42,9 @@
 		dispatch('update', entry);
 	};
 
-	/** @type {(index: number) => void} */
+	/** @param {number} index */
 	const onAddText = (index) => {
-		/** @type {import('src/types').TextBlock} */
+		/** @type {TextBlock} */
 		const newBlock = {
 			id: uuidv4(),
 			type: 'text',
@@ -51,10 +55,60 @@
 		dispatch('update', entry);
 	};
 
-	const onDeleteBlock = (/** @type {string} */ id) => {
+	/** @param {number} index */
+	const onMoveUp = (index) => {
+		entry.blocks = [
+			...entry.blocks.slice(0, index - 1),
+			entry.blocks[index],
+			entry.blocks[index - 1],
+			...entry.blocks.slice(index + 1)
+		];
+		dispatch('update', entry);
+	};
+
+	/** @param {number} index */
+	const onMoveDown = (index) => {
+		entry.blocks = [
+			...entry.blocks.slice(0, index),
+			entry.blocks[index + 1],
+			entry.blocks[index],
+			...entry.blocks.slice(index + 2)
+		];
+		dispatch('update', entry);
+	};
+
+	/** @param {string} id */
+	const onDeleteBlock = (id) => {
 		entry.blocks = entry.blocks.filter((block) => block.id !== id);
 		dispatch('update', entry);
 	};
+
+	const onSave = () => {
+		dispatch('update', entry);
+		goto(`/${entry.id}`);
+	};
+
+	const onDeleteEntry = async () => {
+		if (confirm('Are you sure you want to delete this entry?')) {
+			await deleteEntry(entry.id);
+			await goto('/');
+		}
+	};
+
+	onMount(() => {
+		/** @param {KeyboardEvent} e */
+		const save = (e) => {
+			if (e.ctrlKey && e.key === 's' && !e.shiftKey && !e.altKey) {
+				e.preventDefault();
+				onSave();
+			}
+		};
+		window.addEventListener('keydown', save);
+
+		return () => {
+			window.removeEventListener('keydown', save);
+		};
+	});
 </script>
 
 <main class="stack" class:editing={$editStore}>
@@ -62,15 +116,21 @@
 	<BlockWrapper>
 		<header>
 			{#if $editStore}
-				<input
-					type="text"
-					class="title-input"
-					bind:value={entry.title}
-					on:blur={() => dispatch('update', entry)}
-					placeholder="New Entry"
-				/>
+				<div class="space-between">
+					<input
+						type="text"
+						class="title-input"
+						bind:value={entry.title}
+						on:blur={() => dispatch('update', entry)}
+						placeholder="New Entry"
+					/>
+					<button class="button" data-type="primary" on:click={onSave}>Save</button>
+				</div>
 			{:else}
-				<h2>{entry.title || 'Untitled'}</h2>
+				<div class="space-between">
+					<h2>{entry.title || 'Untitled'}</h2>
+					<EntryOptionDropdown {entry} on:delete={onDeleteEntry} />
+				</div>
 			{/if}
 			<TagEdit {entry} />
 		</header>
@@ -92,6 +152,10 @@
 						bind:props={block}
 						on:delete={() => onDeleteBlock(block.id)}
 						on:update={() => dispatch('update', entry)}
+						first={index === 0}
+						last={index === entry.blocks.length - 1}
+						on:moveup={() => onMoveUp(index)}
+						on:movedown={() => onMoveDown(index)}
 					/>
 				</BlockWrapper>
 				{#if $editStore}

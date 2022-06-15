@@ -6,8 +6,8 @@
 	import { page } from '$app/stores';
 	import { updateEntry } from '$lib/firebase/db';
 
-	const editing = $page.url.searchParams.get('mode') === 'edit';
-	$editStore = editing;
+	// $: editing = $page.url.searchParams.get('mode') === 'edit';
+	// $editStore = editing;
 
 	$: docId = $page.params.id;
 	$: entry = $entryStore.find((doc) => doc.id === docId);
@@ -20,7 +20,7 @@
 	};
 </script>
 
-<a href="/">&larr; Back</a>
+<a href="/" class="link-dark">&larr; Back</a>
 
 {#if entry}
 	<Entry {entry} on:update={onUpdate} />

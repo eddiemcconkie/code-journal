@@ -29,5 +29,15 @@ export const updateEntry = async (entry) => {
 
 /** @param {string} id */
 export const deleteEntry = async (id) => {
-	if (auth.currentUser) deleteDoc(doc(db, `users/${auth.currentUser.uid}/entries/${id}`));
+	if (auth.currentUser) await deleteDoc(doc(db, `users/${auth.currentUser.uid}/entries/${id}`));
+};
+
+/** @param {import('src/types').Entry} entry */
+export const toggleFavorite = async (entry) => {
+	if (auth.currentUser) {
+		await setDoc(doc(db, `users/${auth.currentUser.uid}/entries/${entry.id}`), {
+			...entry,
+			favorite: !entry.favorite
+		});
+	}
 };

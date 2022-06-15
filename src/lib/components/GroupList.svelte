@@ -4,7 +4,7 @@
 </script>
 
 <div>
-	<h3><GroupIcon /> Groups</h3>
+	<h3>Groups <GroupIcon /></h3>
 	<ul>
 		{#each $groupStore as group}
 			<li><a href={`/tags/${group}`}>#{group}</a></li>

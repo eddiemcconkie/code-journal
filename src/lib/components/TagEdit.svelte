@@ -1,23 +1,26 @@
 <script>
-	import CloseIcon from '$lib/icons/CloseIcon.svelte';
-
 	import { editStore } from '$lib/stores/edit';
 	import { flip } from 'svelte/animate';
+	import SearchDropdown from './SearchDropdown.svelte';
+	import CloseIcon from '$lib/icons/CloseIcon.svelte';
+	import { tagStore } from '$lib/stores/tag';
 
 	/** @type {import('src/types').Entry} */
 	export let entry;
 
-	let newTag = '';
+	// let newTag = '';
 
-	const onAddTag = () => {
-		let formattedTag = newTag.trim().toLowerCase();
+	/** @param {{detail: string}} event */
+	const onAddTag = ({ detail }) => {
+		// const onAddTag = () => {
+		let formattedTag = detail.trim().toLowerCase();
 		if (formattedTag === '') {
 			return;
 		}
 		if (!entry.tags.includes(formattedTag)) {
 			entry.tags = [...entry.tags, formattedTag];
 		}
-		newTag = '';
+		// newTag = '';
 	};
 
 	const onDeleteTag = (/** @type {string} */ tag) => {
@@ -29,7 +32,7 @@
 	{#if $editStore}
 		{#each entry.tags.sort((a, b) => (a < b ? -1 : 1)) as tag (tag)}
 			<span animate:flip={{ duration: 200 }}>
-				#{tag}
+				{tag}
 				<button on:click={() => onDeleteTag(tag)}>
 					<CloseIcon color="var(--cyan-9)" />
 				</button>
@@ -37,14 +40,12 @@
 		{/each}
 	{:else}
 		{#each entry.tags.sort((a, b) => (a < b ? -1 : 1)) as tag (tag)}
-			<span><a href={`/tags?name=${tag}`}># {tag}</a></span>
+			<span><a href={`/tags?name=${tag}`}>{tag}</a></span>
 		{/each}
 	{/if}
 </div>
 {#if $editStore}
-	<form on:submit|preventDefault={onAddTag}>
-		<input type="text" bind:value={newTag} placeholder="add tag" />
-	</form>
+	<SearchDropdown data={$tagStore} on:select={onAddTag} closeOnSelect={false} />
 {/if}
 
 <style lang="scss">

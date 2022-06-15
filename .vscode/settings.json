@@ -2,7 +2,7 @@
 	"cssvar.files": [
 		"node_modules/open-props/open-props.min.css",
 		"node_modules/open-props/normalize.min.css",
-		"src/styles/app.css"
+		"src/styles/app.scss"
 	],
 	"cssvar.extensions": ["css", "scss", "html", "jsx", "tsx", "svelte"]
 }

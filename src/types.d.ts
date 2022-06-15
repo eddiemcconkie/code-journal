@@ -31,3 +31,5 @@ export interface Entry {
 	tags: string[];
 	links: string[];
 }
+
+export type SortType = 'recent' | 'favorite' | 'alpha';

@@ -1,12 +1,14 @@
 <script>
 	import { signInWithGithub, signInWithGoogle } from '$lib/firebase/auth';
+	import GithubIcon from '$lib/icons/GithubIcon.svelte';
+	import GoogleIcon from '$lib/icons/GoogleIcon.svelte';
 </script>
 
 <div class="container">
 	<!-- <h3>Sign In</h3> -->
-	<button on:click={signInWithGithub}>Sign In with GitHub</button>
-	<button on:click={signInWithGoogle}>Sign In with Google</button>
-	<a href="/demo">Continue As Guest</a>
+	<button on:click={signInWithGithub}>Sign In with GitHub <GithubIcon /></button>
+	<button on:click={signInWithGoogle}>Sign In with Google <GoogleIcon /></button>
+	<a href="/demo" class="link-dark">Continue As Guest</a>
 </div>
 
 <style>

@@ -4,9 +4,16 @@
 
 	import DeleteButton from '$lib/components/DeleteButton.svelte';
 	import { editStore } from '$lib/stores/edit';
+	import BlockDropdown from './BlockDropdown.svelte';
 
 	/** @type {import('src/types').TextBlock} */
 	export let props;
+
+	/** @type {boolean} */
+	export let first;
+	/** @type {boolean} */
+	export let last;
+
 	const dispatch = createEventDispatcher();
 </script>
 
@@ -19,7 +26,8 @@
 				type="text"
 				placeholder="Title"
 			/>
-			<DeleteButton on:delete />
+			<BlockDropdown {first} {last} on:moveup on:movedown on:delete />
+			<!-- <BlockDropdown {first} {last} on:moveup on:movedown /> -->
 		</div>
 		<textarea bind:value={props.content} on:blur={() => dispatch('update')} use:autosize />
 	{:else}

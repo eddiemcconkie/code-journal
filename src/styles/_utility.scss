@@ -1,0 +1,21 @@
+.text-dark {
+	color: var(--text-dark);
+}
+
+.text-light {
+	color: var(--text-light);
+}
+
+.link-dark,
+.link-dark:visited {
+	color: var(--cyan-9);
+}
+
+.space-between {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	--gap: 1rem;
+	gap: var(--gap);
+}

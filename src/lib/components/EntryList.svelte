@@ -7,28 +7,11 @@
 	import StarIcon from '$lib/icons/StarIcon.svelte';
 	import AlphaIcon from '$lib/icons/AlphaIcon.svelte';
 	import ClockIcon from '$lib/icons/ClockIcon.svelte';
-	import TrashIcon from '$lib/icons/TrashIcon.svelte';
-	import PenIcon from '$lib/icons/PenIcon.svelte';
+	import EntryListDropdown from './EntryListDropdown.svelte';
+	import SortControls from './SortControls.svelte';
 
 	let canCreateNew = true;
 
-	// const createNewEntry = async () => {
-	// 	canCreateNew = false;
-	// 	if (auth.currentUser) {
-	// 		const docRef = await addDoc(collection(db, `users/${auth.currentUser.uid}/entries`), {
-	// 			title: 'New Entry',
-	// 			blocks: [],
-	// 			group: '',
-	// 			favorite: false,
-	// 			createdAt: Timestamp.now(),
-	// 			updatedAt: Timestamp.now(),
-	// 			tags: [],
-	// 			links: []
-	// 		});
-	// 		await goto(`/${docRef.id}?mode=edit`);
-	// 		canCreateNew = true;
-	// 	}
-	// };
 	const createNew = async () => {
 		canCreateNew = false;
 		const id = await createNewEntry();
@@ -36,23 +19,28 @@
 		canCreateNew = true;
 	};
 
-	/** @typedef { 'recent' | 'favorite' | 'alpha' } SortType */
+	// /** @typedef { 'recent' | 'favorite' | 'alpha' } SortType */
 
-	/** @type {SortType} */
+	// /** @type {SortType} */
+	// let sortType = 'recent';
+	// let sortDesc = true;
+
+	// /** @param {SortType} type */
+	// const setSortType = (type) => {
+	// 	// Set to true if not selected, otherwise toggle
+	// 	sortDesc = type === sortType ? !sortDesc : true;
+	// 	sortType = type;
+	// };
+
+	/** @type {import('src/types').SortType} */
 	let sortType = 'recent';
 	let sortDesc = true;
-
-	/** @param {SortType} type */
-	const setSortType = (type) => {
-		// Set to true if not selected, otherwise toggle
-		sortDesc = type === sortType ? !sortDesc : true;
-		sortType = type;
-	};
 
 	$: sortedEntries = $entryStore.sort((a, b) => {
 		if (sortType === 'favorite') {
 			if (a.favorite !== b.favorite) {
-				return a.favorite ? -1 : 1;
+				if (sortDesc) return a.favorite ? -1 : 1;
+				else return a.favorite ? 1 : -1;
 			}
 		}
 		if (sortType === 'alpha') {
@@ -68,52 +56,56 @@
 	const onDelete = (entry) => {
 		$userStore && confirm('Are you sure you want to delete this entry?') && deleteEntry(entry.id);
 	};
+
+	/** @param {import("@firebase/firestore").Timestamp} date */
+	const timeSince = (date) => {
+		const now = Date.now();
+		const diffSeconds = (now - date.toMillis()) / 1000;
+
+		const times = [
+			{ label: 'year', seconds: 60 * 60 * 24 * 365 },
+			{ label: 'month', seconds: 60 * 60 * 24 * 30 },
+			{ label: 'week', seconds: 60 * 60 * 24 * 7 },
+			{ label: 'day', seconds: 60 * 60 * 24 },
+			{ label: 'hour', seconds: 60 * 60 },
+			{ label: 'minute', seconds: 60 }
+		];
+
+		for (const time of times) {
+			if (diffSeconds >= time.seconds) {
+				const ratio = diffSeconds / time.seconds;
+				return `${Math.floor(ratio)} ${time.label}${Math.floor(ratio) > 1 ? 's' : ''} ago`;
+			}
+		}
+		return 'just now';
+	};
 </script>
 
 <div class="action-bar">
-	<button on:click={createNew} disabled={!canCreateNew} class="button primary"> New Entry! </button>
-	<div class="sort-by">
-		<button
-			on:click={() => setSortType('recent')}
-			class:selected={sortType === 'recent'}
-			class="button"
-		>
-			<ClockIcon filled={sortDesc || sortType !== 'recent'} />
-		</button>
-		<button
-			on:click={() => setSortType('favorite')}
-			class:selected={sortType === 'favorite'}
-			class="button"
-		>
-			<StarIcon filled={sortDesc || sortType !== 'favorite'} />
-		</button>
-		<button
-			on:click={() => setSortType('alpha')}
-			class:selected={sortType === 'alpha'}
-			class="button"
-		>
-			<AlphaIcon desc={sortDesc || sortType !== 'alpha'} />
-		</button>
-	</div>
+	<button on:click={createNew} disabled={!canCreateNew} class="button" data-type="primary">
+		New Entry!
+	</button>
+	<SortControls bind:sortType bind:sortDesc />
 </div>
-<ul>
+<ul class="select-list" data-type="gray">
 	{#each sortedEntries as entry (entry.id)}
 		<li animate:flip={{ duration: 200 }}>
-			<a href={`/${entry.id}`}>
-				{#if entry.title}
-					{entry.title}
-				{:else}
-					<em>Untitled</em>
-				{/if}
-			</a>&nbsp;
-			<div class="actions">
-				<a href={`/${entry.id}?mode=edit`} class="icon">
-					<PenIcon />
-				</a>
-				<button on:click={() => onDelete(entry)} class="icon">
-					<TrashIcon />
-				</button>
-			</div>
+			<button on:click={() => goto(`/${entry.id}`)} class="entry-info">
+				<span class="entry-title">
+					{#if entry.title}
+						{entry.title}
+					{:else}
+						<em>Untitled</em>
+					{/if}
+				</span>
+				<span class="entry-icon">
+					{#if entry.favorite}
+						<StarIcon filled small />
+					{/if}
+				</span>
+				<span class="entry-time-since">{timeSince(entry.updatedAt)}</span>
+			</button>
+			<EntryListDropdown {entry} on:delete={() => onDelete(entry)} />
 		</li>
 	{/each}
 </ul>
@@ -123,130 +115,49 @@
 		display: flex;
 		flex-flow: row wrap;
 		justify-content: space-between;
-		// align-items: center;
 		align-items: flex-end;
 	}
 
-	ul {
-		list-style-type: none;
-		padding: 0;
-		display: flex;
-		flex-direction: column;
-		gap: 1px;
-		border-top: var(--border-size-5) solid var(--slate-9);
-		// gap: var(--size-3);
-		// gap: var(--size-1);
-		// border-radius: var(--radius-2);
-		// overflow: hidden;
-		background-color: var(--slate-9);
+	.select-list {
+		padding-top: var(--border-size-5);
 	}
 
-	li {
-		// width: 100%;
-		max-inline-size: 100%;
-		// max-inline-size: var(--size-content-3);
-		// padding: 0 var(--size-2);
-		padding: var(--size-2) var(--size-3);
+	.entry-info {
 		display: flex;
-		justify-content: space-between;
-		// border: var(--border-size-1) solid var(--gray-5);
-		// border-radius: var(--radius-2);
-		background-color: var(--slate-0);
-		box-shadow: var(--shadow-1);
+		align-items: baseline;
+		gap: var(--size-2);
+		min-width: 0;
+		padding-right: 0;
+	}
 
-		transition: background-color 100ms var(--ease-5);
+	.entry-title {
+		margin-right: auto;
+		display: inline-block;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 
-		.icon {
-			color: var(--slate-8);
-		}
-
-		&:hover,
-		&:focus-within {
-			background-color: var(--slate-8);
-
-			> a {
-				color: var(--text-light);
-			}
-
-			.icon {
-				color: var(--text-light);
-			}
-		}
-
-		> a {
-			width: 100%;
-			font-weight: bold;
-			text-decoration: none;
-			color: var(--text-dark);
+		> em {
+			// Prevents clipping of italic text from overlow: hidden
+			padding-right: var(--size-1);
 		}
 	}
 
-	.actions {
-		display: flex;
-		gap: var(--size-3);
-
-		> a {
-			text-decoration: none;
-			// transition: transform 100ms ease-in-out;
-			// transform-origin: 50% 75%;
-			// transform-origin: center;
-			display: grid;
-			place-items: center;
-
-			&:hover,
-			&:focus-visible {
-				transform: scale(1.5);
-			}
-		}
+	.entry-icon {
+		flex-shrink: 0;
 	}
 
-	a {
-		color: white;
-		text-decoration: underline solid white;
+	.entry-time-since {
+		font-weight: normal;
+		font-size: var(--font-size-0);
+		font-style: italic;
+		white-space: nowrap;
+		min-width: var(--size-10);
+		text-align: end;
 
-		&:hover,
-		&:focus-visible {
-			text-decoration: none;
-		}
-	}
-
-	.sort-by {
-		display: flex;
-
-		> button {
-			padding: var(--size-2);
-			border-radius: 0;
-			color: var(--slate-9);
-
-			:global(svg) {
-				transition: transform 200ms var(--ease-5);
-			}
-			&:hover,
-			&:focus-visible {
-				:global(svg) {
-					transform: scale(1.2);
-				}
-			}
-
-			&.selected {
-				background-color: var(--cyan-9);
-				// background-color: var(--blue-9);
-				color: var(--text-light);
-				&:hover,
-				&:focus-visible {
-					background-color: var(--cyan-8);
-					// background-color: var(--blue-7);
-				}
-			}
-		}
-
-		--radius: var(--radius-2);
-
-		:first-child {
-			border-radius: var(--radius) 0 0 var(--radius);
-		}
-		:last-child {
-			border-radius: 0 var(--radius) var(--radius) 0;
+		// var(--size-sm)
+		@media screen and (max-width: 480px) {
+			display: none;
 		}
 	}
 </style>
