@@ -19,7 +19,7 @@
 
 <div class="container">
 	{#if $editStore}
-		<div class="space-between">
+		<div class="space-between gap-3">
 			<input
 				bind:value={props.title}
 				on:blur={() => dispatch('update')}
@@ -54,23 +54,16 @@
 		padding: 0.5rem;
 		border-radius: 4px;
 		border: 0;
-		// color: $text-light;
-		// background-color: $gray-700;
 	}
 
 	input {
 		flex: 1;
 	}
 
-	.space-between {
-		--gap: 1.5rem;
-	}
-
 	input,
 	h2 {
 		font-weight: bold;
 		font-size: 1.3rem;
-		// color: $text-light;
 	}
 
 	textarea {

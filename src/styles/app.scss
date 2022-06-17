@@ -30,6 +30,11 @@ html {
 	border-width: 0 0 0 2px !important;
 }
 
+.cm-editor {
+	padding: var(--size-2) !important;
+	border-radius: var(--border-size-3) !important;
+}
+
 body {
 	background-color: var(--gray-2);
 	font-family: Lato, sans-serif;
@@ -53,7 +58,7 @@ select {
 }
 
 .button {
-	background-color: var(--slate-2);
+	background-color: var(--slate-1);
 	color: var(--text-dark);
 	font-weight: bold;
 	border-radius: var(--radius-2);
@@ -61,7 +66,7 @@ select {
 }
 .button:hover,
 .button:focus-visible {
-	background-color: var(--slate-1);
+	background-color: var(--slate-2);
 }
 
 .button[data-type='primary'] {
@@ -69,6 +74,8 @@ select {
 	background-color: var(--cyan-9);
 	color: white;
 	box-shadow: var(--shadow-2);
+	font-size: var(--font-size-3);
+	// font-size: var(--font-size-fluid-1);
 
 	transition: transform 200ms var(--ease-5);
 
@@ -90,7 +97,12 @@ select {
 h1,
 h2,
 h3 {
-	color: var(--slate-0);
+	// color: var(--slate-0);
+	color: white;
+}
+
+h3 {
+	font-size: var(--font-size-4);
 }
 
 a {

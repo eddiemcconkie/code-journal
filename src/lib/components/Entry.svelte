@@ -116,7 +116,7 @@
 	<BlockWrapper>
 		<header>
 			{#if $editStore}
-				<div class="space-between">
+				<div class="space-between gap-3">
 					<input
 						type="text"
 						class="title-input"
@@ -127,7 +127,7 @@
 					<button class="button" data-type="primary" on:click={onSave}>Save</button>
 				</div>
 			{:else}
-				<div class="space-between">
+				<div class="space-between gap-3">
 					<h2>{entry.title || 'Untitled'}</h2>
 					<EntryOptionDropdown {entry} on:delete={onDeleteEntry} />
 				</div>

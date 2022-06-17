@@ -1,16 +1,19 @@
 import { auth, db } from '$lib/firebase';
 import { addDoc, collection, deleteDoc, doc, setDoc, Timestamp } from 'firebase/firestore';
 
-export const createNewEntry = async () => {
+/** @param {{tag?: string , group?: string }} args */
+export const createNewEntry = async ({ tag, group } = {}) => {
+	const tags = tag ? [tag] : [];
+	group = group || '';
 	if (auth.currentUser) {
 		const docRef = await addDoc(collection(db, `users/${auth.currentUser.uid}/entries`), {
 			title: 'New Entry',
 			blocks: [],
-			group: '',
+			group,
 			favorite: false,
 			createdAt: Timestamp.now(),
 			updatedAt: Timestamp.now(),
-			tags: [],
+			tags,
 			links: []
 		});
 		return docRef.id;

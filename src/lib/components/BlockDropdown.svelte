@@ -23,32 +23,21 @@
 		{#if !first}
 			<li>
 				<button on:click={() => dispatch('moveup')}>
-					<span>Move up <ArrowIcon down={false} /></span>
+					<span class="space-between">Move up <ArrowIcon down={false} /></span>
 				</button>
 			</li>
 		{/if}
 		{#if !last}
 			<li>
 				<button on:click={() => dispatch('movedown')}>
-					<span>Move down <ArrowIcon down={true} /></span>
+					<span class="space-between">Move down <ArrowIcon down={true} /></span>
 				</button>
 			</li>
 		{/if}
 		<li>
 			<button on:click={() => dispatch('delete')}>
-				<span>Delete <TrashIcon /></span>
+				<span class="space-between">Delete <TrashIcon /></span>
 			</button>
 		</li>
 	</ul>
 </Dropdown>
-
-<style>
-	button {
-		width: 100%;
-	}
-	span {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-	}
-</style>

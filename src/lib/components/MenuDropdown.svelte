@@ -3,14 +3,19 @@
 	import MenuIcon from '$lib/icons/MenuIcon.svelte';
 	import CloseIcon from '$lib/icons/CloseIcon.svelte';
 	import { signOut } from '$lib/firebase/auth';
+	import { fly } from 'svelte/transition';
 </script>
 
 <Dropdown>
-	<span slot="button" let:open>
+	<span slot="button" let:open class="overlap-children">
 		{#if open}
-			<CloseIcon />
+			<span transition:fly={{ y: 20, duration: 100 }}>
+				<CloseIcon />
+			</span>
 		{:else}
-			<MenuIcon />
+			<span transition:fly={{ y: 20, duration: 100 }}>
+				<MenuIcon />
+			</span>
 		{/if}
 	</span>
 
@@ -20,14 +25,3 @@
 		</li>
 	</ul>
 </Dropdown>
-
-<style>
-	button {
-		width: 100%;
-	}
-	span {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-	}
-</style>

@@ -137,8 +137,8 @@
 
 <style lang="scss">
 	.container {
-		overflow: hidden;
-		border-radius: 5px;
+		// overflow: hidden;
+		// border-radius: 5px;
 		position: relative;
 	}
 

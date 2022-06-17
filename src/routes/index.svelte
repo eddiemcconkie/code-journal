@@ -12,8 +12,8 @@
 			<EntryList />
 		</main>
 		<aside>
-			<TagList />
 			<GroupList />
+			<TagList />
 		</aside>
 	</div>
 {:else}
@@ -46,8 +46,10 @@
 		background-color: var(--slate-9);
 		flex: 1 1 200px;
 		display: flex;
-		flex-flow: row wrap;
+		// flex-flow: row wrap;
+		flex-direction: column;
 		gap: var(--size-fluid-2) var(--size-fluid-6);
 		padding: var(--size-fluid-2);
+		// align-content: start;
 	}
 </style>

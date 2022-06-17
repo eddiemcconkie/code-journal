@@ -22,32 +22,23 @@
 	<ul slot="dropdown" class="select-list">
 		<li>
 			<button on:click={() => goto(`/${entry.id}?mode=edit`)}>
-				<span>Edit <PenIcon /></span>
+				<span class="space-between">Edit <PenIcon /></span>
 			</button>
 		</li>
-		<!-- <li>
-			<button on:click={() => toggleFavorite(entry)}>
-				{#if entry.favorite}
-					<span>Unavorite <StarIcon /></span>
-				{:else}
-					<span>Favorite <StarIcon filled /></span>
-				{/if}
-			</button>
-		</li> -->
 		<li>
 			<button>
-				<span>Add to Group <GroupIcon /></span>
+				<span class="space-between">Add to Group <GroupIcon /></span>
 			</button>
 		</li>
 		<li>
 			<button on:click={() => dispatch('delete')}>
-				<span>Delete <TrashIcon /></span>
+				<span class="space-between">Delete <TrashIcon /></span>
 			</button>
 		</li>
 	</ul>
 </Dropdown>
 
-<style>
+<!-- <style>
 	button {
 		width: 100%;
 	}
@@ -56,4 +47,4 @@
 		justify-content: space-between;
 		align-items: center;
 	}
-</style>
+</style> -->

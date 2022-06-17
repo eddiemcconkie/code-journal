@@ -2,39 +2,28 @@
 	import { goto } from '$app/navigation';
 	import { createNewEntry, deleteEntry } from '$lib/firebase/db';
 	import { userStore } from '$lib/stores/user';
-	import { entryStore } from '$lib/stores/entry';
 	import { flip } from 'svelte/animate';
 	import StarIcon from '$lib/icons/StarIcon.svelte';
 	import EntryListDropdown from './EntryListDropdown.svelte';
 	import SortControls from './SortControls.svelte';
+	import { filteredEntryStore } from '$lib/stores/filteredEntry';
+	import BackIcon from '$lib/icons/BackIcon.svelte';
+	import { groupParam, tagParam } from '$lib/stores/searchParam';
 
 	let canCreateNew = true;
 
 	const createNew = async () => {
 		canCreateNew = false;
-		const id = await createNewEntry();
+		const id = await createNewEntry({ group: $groupParam, tag: $tagParam });
 		await goto(`/${id}?mode=edit`);
 		canCreateNew = true;
 	};
-
-	// /** @typedef { 'recent' | 'favorite' | 'alpha' } SortType */
-
-	// /** @type {SortType} */
-	// let sortType = 'recent';
-	// let sortDesc = true;
-
-	// /** @param {SortType} type */
-	// const setSortType = (type) => {
-	// 	// Set to true if not selected, otherwise toggle
-	// 	sortDesc = type === sortType ? !sortDesc : true;
-	// 	sortType = type;
-	// };
 
 	/** @type {import('src/types').SortType} */
 	let sortType = 'recent';
 	let sortDesc = true;
 
-	$: sortedEntries = $entryStore.sort((a, b) => {
+	$: sortedEntries = $filteredEntryStore.sort((a, b) => {
 		if (sortType === 'favorite') {
 			if (a.favorite !== b.favorite) {
 				if (sortDesc) return a.favorite ? -1 : 1;
@@ -85,28 +74,46 @@
 	</button>
 	<SortControls bind:sortType bind:sortDesc />
 </div>
-<ul class="select-list" data-type="gray">
-	{#each sortedEntries as entry (entry.id)}
-		<li animate:flip={{ duration: 200 }}>
-			<button on:click={() => goto(`/${entry.id}`)} class="entry-info">
-				<span class="entry-title">
-					{#if entry.title}
-						{entry.title}
-					{:else}
-						<em>Untitled</em>
-					{/if}
-				</span>
-				<span class="entry-icon">
-					{#if entry.favorite}
-						<StarIcon filled small />
-					{/if}
-				</span>
-				<span class="entry-time-since">{timeSince(entry.updatedAt)}</span>
-			</button>
-			<EntryListDropdown {entry} on:delete={() => onDelete(entry)} />
-		</li>
-	{/each}
-</ul>
+
+<div>
+	<div class="filter | align-item">
+		{#if !$groupParam && !$tagParam}
+			<span>All Entries</span>
+		{:else}
+			<a href="/" class="back-icon"><BackIcon /></a>
+		{/if}
+
+		{$groupParam}
+		{$tagParam}
+	</div>
+	<!-- Don't animate if the tag or group are changing -->
+	{#key [$groupParam, $tagParam]}
+		<ul class="select-list" data-type="gray">
+			{#each sortedEntries as entry (entry.id)}
+				<li animate:flip={{ duration: 200 }}>
+					<button on:click={() => goto(`/${entry.id}`)} class="entry-info">
+						<span class="entry-title">
+							{#if entry.title}
+								{entry.title}
+							{:else}
+								<em>Untitled</em>
+							{/if}
+						</span>
+						<span class="entry-icon">
+							{#if entry.favorite}
+								<StarIcon filled small />
+							{/if}
+						</span>
+						<span class="entry-time-since">{timeSince(entry.updatedAt)}</span>
+					</button>
+					<EntryListDropdown {entry} on:delete={() => onDelete(entry)} />
+				</li>
+			{:else}
+				<div class="no-entries"><em>No entries</em></div>
+			{/each}
+		</ul>
+	{/key}
+</div>
 
 <style lang="scss">
 	.action-bar {
@@ -114,10 +121,6 @@
 		flex-flow: row wrap;
 		justify-content: space-between;
 		align-items: flex-end;
-	}
-
-	.select-list {
-		padding-top: var(--border-size-5);
 	}
 
 	.entry-info {
@@ -154,5 +157,30 @@
 		@media screen and (max-width: 480px) {
 			display: none;
 		}
+	}
+
+	.filter {
+		background-color: var(--slate-9);
+		color: white;
+		display: flex;
+		padding: var(--size-1) var(--size-3);
+		gap: var(--size-2);
+		font-weight: bold;
+		font-size: var(--font-size-3);
+	}
+
+	.back-icon {
+		margin: 0;
+		margin-left: var(--size-000);
+
+		color: inherit;
+		display: flex;
+	}
+
+	.no-entries {
+		font-size: var(--font-size-2);
+		color: var(--text-dark);
+		background-color: var(--slate-0);
+		padding: var(--size-4);
 	}
 </style>
