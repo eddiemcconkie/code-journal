@@ -4,6 +4,7 @@
 	import SearchDropdown from './SearchDropdown.svelte';
 	import CloseIcon from '$lib/icons/CloseIcon.svelte';
 	import { tagStore } from '$lib/stores/tag';
+	import AddIcon from '$lib/icons/AddIcon.svelte';
 
 	/** @type {import('src/types').Entry} */
 	export let entry;
@@ -11,9 +12,9 @@
 	// let newTag = '';
 
 	/** @param {{detail: string}} event */
-	const onAddTag = ({ detail }) => {
+	const onAddTag = ({ detail: tag }) => {
 		// const onAddTag = () => {
-		let formattedTag = detail.trim().toLowerCase();
+		let formattedTag = tag.trim().toLowerCase();
 		if (formattedTag === '') {
 			return;
 		}
@@ -45,7 +46,13 @@
 	{/if}
 </div>
 {#if $editStore}
-	<SearchDropdown data={$tagStore} on:select={onAddTag} closeOnSelect={false} />
+	<div class="align-flex-start">
+		<SearchDropdown data={$tagStore} filterResults on:select={onAddTag}>
+			<span slot="button" class="trigger">
+				Add tag <AddIcon small />
+			</span>
+		</SearchDropdown>
+	</div>
 {/if}
 
 <style lang="scss">
@@ -92,6 +99,21 @@
 			}
 		}
 	}
+
+	.trigger {
+		background-color: var(--cyan-9);
+		display: inline-flex;
+		align-items: center;
+		gap: var(--size-1);
+		padding: var(--size-1) var(--size-2);
+		border-radius: var(--border-size-3);
+
+		&:hover,
+		&:focus-visible {
+			background-color: var(--cyan-8);
+		}
+	}
+
 	input {
 		width: auto;
 	}

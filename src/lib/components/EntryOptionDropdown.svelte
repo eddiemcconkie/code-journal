@@ -5,8 +5,8 @@
 	import PenIcon from '$lib/icons/PenIcon.svelte';
 	import TrashIcon from '$lib/icons/TrashIcon.svelte';
 	import { goto } from '$app/navigation';
-	import GroupIcon from '$lib/icons/GroupIcon.svelte';
 	import EllipsisIcon from '$lib/icons/EllipsisIcon.svelte';
+	import GroupSearchDropdown from './GroupSearchDropdown.svelte';
 
 	/** @type {import('src/types').Entry} */
 	export let entry;
@@ -26,9 +26,7 @@
 			</button>
 		</li>
 		<li>
-			<button>
-				<span class="space-between">Add to Group <GroupIcon /></span>
-			</button>
+			<GroupSearchDropdown {entry} />
 		</li>
 		<li>
 			<button on:click={() => dispatch('delete')}>

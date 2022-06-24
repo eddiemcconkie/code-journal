@@ -8,7 +8,7 @@
 	import { goto } from '$app/navigation';
 	import StarIcon from '$lib/icons/StarIcon.svelte';
 	import { toggleFavorite } from '$lib/firebase/db';
-	import GroupIcon from '$lib/icons/GroupIcon.svelte';
+	import GroupSearchDropdown from './GroupSearchDropdown.svelte';
 
 	/** @type {import('src/types').Entry} */
 	export let entry;
@@ -37,9 +37,15 @@
 			</button>
 		</li>
 		<li>
-			<button>
-				<span>Add to Group <GroupIcon /></span>
-			</button>
+			<GroupSearchDropdown {entry} />
+			<!-- <SearchDropdown
+				data={$groupStore.map((group) => group.name)}
+				defaultText={entry.group}
+				closeOnSelect
+				on:select={onSetGroup}
+			>
+				<span slot="button" on:click>Add to Group <GroupIcon /></span>
+			</SearchDropdown> -->
 		</li>
 		<li>
 			<button on:click={() => dispatch('delete')}>

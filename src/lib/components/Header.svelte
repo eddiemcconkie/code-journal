@@ -11,7 +11,7 @@
 		{#if $userStore}
 			<MenuDropdown />
 		{:else}
-			<a href="/" class="button">Log in</a>
+			<a href="/">Log in</a>
 		{/if}
 	</div>
 </header>
@@ -36,5 +36,10 @@
 
 	h1 {
 		font-size: 1.8rem;
+	}
+
+	a {
+		color: white;
+		font-size: 1.2rem;
 	}
 </style>

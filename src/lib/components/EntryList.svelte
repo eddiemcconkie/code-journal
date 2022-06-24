@@ -41,7 +41,7 @@
 
 	/** @param {import('src/types').Entry} entry */
 	const onDelete = (entry) => {
-		$userStore && confirm('Are you sure you want to delete this entry?') && deleteEntry(entry.id);
+		$userStore && confirm('Are you sure you want to delete this entry?') && deleteEntry(entry);
 	};
 
 	/** @param {import("@firebase/firestore").Timestamp} date */

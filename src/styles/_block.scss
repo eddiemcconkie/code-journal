@@ -21,7 +21,6 @@
 		button {
 			background-color: transparent;
 			text-align: start;
-			// font-weight: bold;
 			padding: var(--size-2) var(--size-3);
 		}
 
@@ -31,12 +30,10 @@
 
 		&:hover {
 			background-color: var(--highlight-color-1);
-			// color: white;
 			color: var(--highlight-color-text);
 		}
 		&:focus-within {
 			background-color: var(--highlight-color-2);
-			// color: white;
 			color: var(--highlight-color-text);
 		}
 

@@ -27,6 +27,10 @@
 	align-items: baseline;
 }
 
+.align-flex-start {
+	align-self: flex-start;
+}
+
 .gap-1 {
 	gap: var(--size-1);
 }

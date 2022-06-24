@@ -1,16 +1,6 @@
 import { derived } from 'svelte/store';
 import { entryStore } from '$lib/stores/entry';
 
-// /** @type {import('svelte/store').Readable<string[]>} */
-// export const groupStore = derived(entryStore, ($entryStore) =>
-// 	$entryStore.reduce((/** @type {string[]} */ acc, entry) => {
-// 		if (entry.group.trim() !== '' && !acc.includes(entry.group)) {
-// 			acc.push(entry.group.trim());
-// 		}
-// 		return acc;
-// 	}, [])
-// );
-
 /** @typedef {{name: string, size: number}[]} GroupList */
 
 /** @type {import('svelte/store').Readable<GroupList>} */
@@ -24,6 +14,6 @@ export const groupStore = derived(entryStore, ($entryStore) =>
 				acc[groupIndex].size += 1;
 			}
 		}
-		return acc;
+		return acc.sort((a, b) => (a.name > b.name ? 1 : -1));
 	}, [])
 );

@@ -90,7 +90,7 @@
 
 	const onDeleteEntry = async () => {
 		if (confirm('Are you sure you want to delete this entry?')) {
-			await deleteEntry(entry.id);
+			await deleteEntry(entry);
 			await goto('/');
 		}
 	};
@@ -179,16 +179,17 @@
 
 	.stack {
 		--max-width: 800px;
-		--margin: 1rem;
+		--margin: var(--size-3);
 		width: min(var(--max-width), 100% - var(--margin));
 		margin-inline: auto;
 		display: flex;
 		flex-direction: column;
+		padding-block: var(--size-7) var(--size-13);
 
 		&:not(.editing) {
 			background-color: #fff;
-			padding: 2rem;
-			gap: 2rem;
+			padding-inline: var(--size-7);
+			gap: var(--size-7);
 			box-shadow: var(--shadow-1);
 		}
 	}

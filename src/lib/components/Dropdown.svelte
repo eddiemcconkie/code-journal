@@ -5,6 +5,7 @@
 
 	// Export in case the parent component wants to open or close manually
 	export let isOpen = false;
+
 	const openDropdown = () => {
 		isOpen = true;
 	};
@@ -19,7 +20,7 @@
 </script>
 
 <div class="container">
-	<button class="trigger" on:click={toggleDropdown} bind:this={toggleButton}>
+	<button class="trigger" on:click|stopPropagation={toggleDropdown} bind:this={toggleButton}>
 		<slot name="button" open={isOpen} />
 	</button>
 	{#if isOpen}
@@ -48,6 +49,7 @@
 	button {
 		background-color: transparent;
 		padding: 0;
+		flex: 1;
 	}
 
 	.dropdown {
@@ -55,7 +57,7 @@
 		top: 100%;
 		background-color: white;
 		border-radius: var(--radius-1);
-		overflow: hidden;
+		/* overflow: hidden; */
 		box-shadow: var(--shadow-2);
 		z-index: var(--layer-5);
 		min-width: 180px;
@@ -64,6 +66,18 @@
 	.right {
 		right: 0;
 	}
+
+	/* .nested {
+		top: 50%;
+	}
+
+	.nested:not(.right) {
+		left: calc(100% + var(--size-1));
+	}
+
+	.nested.right {
+		right: calc(100% + var(--size-1));
+	} */
 
 	/* @media (max-width: 480px) {
 		.dropdown {
