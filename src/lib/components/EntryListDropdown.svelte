@@ -9,6 +9,7 @@
 	import StarIcon from '$lib/icons/StarIcon.svelte';
 	import { toggleFavorite } from '$lib/firebase/db';
 	import GroupSearchDropdown from './GroupSearchDropdown.svelte';
+	import Modal from './Modal.svelte';
 
 	/** @type {import('src/types').Entry} */
 	export let entry;
@@ -30,7 +31,7 @@
 		<li>
 			<button on:click={() => toggleFavorite(entry)}>
 				{#if entry.favorite}
-					<span>Unavorite <StarIcon /></span>
+					<span>Unfavorite <StarIcon /></span>
 				{:else}
 					<span>Favorite <StarIcon filled /></span>
 				{/if}
@@ -38,19 +39,17 @@
 		</li>
 		<li>
 			<GroupSearchDropdown {entry} />
-			<!-- <SearchDropdown
-				data={$groupStore.map((group) => group.name)}
-				defaultText={entry.group}
-				closeOnSelect
-				on:select={onSetGroup}
-			>
-				<span slot="button" on:click>Add to Group <GroupIcon /></span>
-			</SearchDropdown> -->
 		</li>
 		<li>
-			<button on:click={() => dispatch('delete')}>
+			<Modal on:accept={() => dispatch('delete')}>
+				<span slot="trigger">Delete <TrashIcon /></span>
+				<svelte:fragment slot="content">
+					Are you sure you want to delete this entry?
+				</svelte:fragment>
+			</Modal>
+			<!-- <button on:click={() => dispatch('delete')}>
 				<span>Delete <TrashIcon /></span>
-			</button>
+			</button> -->
 		</li>
 	</ul>
 </Dropdown>

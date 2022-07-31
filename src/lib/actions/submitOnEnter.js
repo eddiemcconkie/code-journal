@@ -1,7 +1,7 @@
 /**
  * @param {HTMLInputElement} node
- * @param {(value: string)=>void} handler
- *  */
+ * @param {(value: string) => void} handler
+ */
 export const submitOnEnter = (node, handler) => {
 	/** @param {KeyboardEvent} e */
 	const onKeyDown = (e) => {
@@ -10,9 +10,12 @@ export const submitOnEnter = (node, handler) => {
 			node.value = '';
 		}
 	};
-	node.addEventListener('keydown', onKeyDown);
 
-	return {destroy()  {
-		node.removeEventListener('keydown', onKeyDown);
-	}};
+	node.addEventListener('keyup', onKeyDown);
+
+	return {
+		destroy() {
+			node.removeEventListener('keyup', onKeyDown);
+		}
+	};
 };

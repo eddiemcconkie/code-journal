@@ -2,7 +2,6 @@
 	import { createEventDispatcher } from 'svelte';
 	import autosize from 'svelte-autosize';
 
-	import DeleteButton from '$lib/components/DeleteButton.svelte';
 	import { editStore } from '$lib/stores/edit';
 	import BlockDropdown from './BlockDropdown.svelte';
 
@@ -22,14 +21,13 @@
 		<div class="space-between gap-3">
 			<input
 				bind:value={props.title}
-				on:blur={() => dispatch('update')}
+				on:input={() => dispatch('dirty')}
 				type="text"
 				placeholder="Title"
 			/>
 			<BlockDropdown {first} {last} on:moveup on:movedown on:delete />
-			<!-- <BlockDropdown {first} {last} on:moveup on:movedown /> -->
 		</div>
-		<textarea bind:value={props.content} on:blur={() => dispatch('update')} use:autosize />
+		<textarea bind:value={props.content} on:input={() => dispatch('dirty')} use:autosize />
 	{:else}
 		{#if props.title}
 			<h3>{props.title}</h3>
@@ -60,8 +58,7 @@
 		flex: 1;
 	}
 
-	input,
-	h2 {
+	input {
 		font-weight: bold;
 		font-size: 1.3rem;
 	}

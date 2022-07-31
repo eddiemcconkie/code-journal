@@ -33,7 +33,8 @@
 
 	/** @param {string} selection */
 	const onSelect = (selection) => {
-		if (selection.trim().length > 0) dispatch('select', selection);
+		// if (selection.trim().length > 0) dispatch('select', selection);
+		dispatch('select', selection.trim());
 
 		searchQuery = '';
 		input.focus();

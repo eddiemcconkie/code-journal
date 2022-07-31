@@ -19,7 +19,7 @@
 	closeOnSelect
 	on:select={onSetGroup}
 >
-	<span slot="button" on:click>Add to Group <GroupIcon /></span>
+	<span slot="button" on:click>{entry.group ? 'Change Group' : 'Add to Group'} <GroupIcon /></span>
 </SearchDropdown>
 
 <style>

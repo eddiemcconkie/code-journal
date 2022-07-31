@@ -41,7 +41,7 @@
 
 	/** @param {import('src/types').Entry} entry */
 	const onDelete = (entry) => {
-		$userStore && confirm('Are you sure you want to delete this entry?') && deleteEntry(entry);
+		$userStore && deleteEntry(entry);
 	};
 
 	/** @param {import("@firebase/firestore").Timestamp} date */
@@ -98,6 +98,10 @@
 							{:else}
 								<em>Untitled</em>
 							{/if}
+							<!-- Show the group label if it exists and all entries are being shown -->
+							{#if entry.group && !$groupParam}
+								<span class="group-label">/ {entry.group}</span>
+							{/if}
 						</span>
 						<span class="entry-icon">
 							{#if entry.favorite}
@@ -139,6 +143,10 @@
 		text-overflow: ellipsis;
 		// Prevents a bit of clipping from overlow: hidden
 		padding-right: var(--size-1);
+	}
+
+	.group-label {
+		font-size: var(--font-size-0);
 	}
 
 	.entry-icon {

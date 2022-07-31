@@ -8,6 +8,7 @@ export const trapFocus = (node) => {
 
 	/** @param {KeyboardEvent} e */
 	const handleKeydown = (e) => {
+		e.stopPropagation();
 		if (e.key === 'Tab') {
 			const focusableElements = getFocusableElements();
 			const firstFocusableElement = focusableElements[0];

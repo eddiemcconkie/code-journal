@@ -75,18 +75,41 @@ select {
 	color: white;
 	box-shadow: var(--shadow-2);
 	font-size: var(--font-size-3);
-	// font-size: var(--font-size-fluid-1);
 
 	transition: transform 200ms var(--ease-5);
 
-	&:hover,
-	&:focus-visible {
+	&:hover:not(:disabled),
+	&:focus-visible:not(:disabled) {
 		background-color: var(--cyan-8);
 		transform: scale(1.1);
 	}
 
 	&:disabled {
 		background-color: var(--slate-2);
+	}
+}
+
+.button[data-type='flat'] {
+	padding: var(--size-2) var(--size-4);
+	background-color: var(--cyan-9);
+	color: white;
+	font-size: var(--font-size-2);
+
+	&:hover,
+	&:focus-visible {
+		background-color: var(--cyan-8);
+	}
+}
+
+.button[data-type='gray'] {
+	padding: var(--size-2) var(--size-4);
+	background-color: var(--slate-0);
+	color: var(--text-dark);
+	font-size: var(--font-size-2);
+
+	&:hover,
+	&:focus-visible {
+		background-color: var(--slate-1);
 	}
 }
 

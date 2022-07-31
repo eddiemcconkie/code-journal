@@ -76,7 +76,7 @@
 			state,
 			parent
 		});
-		view.contentDOM.addEventListener('blur', () => dispatch('update'));
+		view.contentDOM.addEventListener('input', () => dispatch('dirty'));
 	});
 
 	// @ts-ignore
@@ -116,7 +116,6 @@
 				<option>Markdown</option>
 			</select>
 			<BlockDropdown {first} {last} on:moveup on:movedown on:delete />
-			<!-- <BlockDropdown {first} {last} on:moveup on:movedown /> -->
 		</div>
 	{:else}
 		<p>{props.language}</p>
@@ -137,8 +136,6 @@
 
 <style lang="scss">
 	.container {
-		// overflow: hidden;
-		// border-radius: 5px;
 		position: relative;
 	}
 

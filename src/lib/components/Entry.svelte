@@ -19,9 +19,37 @@
 	export let entry;
 
 	const dispatch = createEventDispatcher();
+
+	let dirty = false;
+
 	// Save the entry to the database before navigating away
 	beforeNavigate(() => {
-		dispatch('update', entry);
+		if (dirty) dispatch('save');
+		dirty = false;
+	});
+
+	onMount(() => {
+		/** @param {KeyboardEvent} e */
+		const ctrlS = (e) => {
+			if (e.ctrlKey && e.key === 's' && !e.shiftKey && !e.altKey) {
+				e.preventDefault();
+				onSave();
+			}
+		};
+		/** @param {BeforeUnloadEvent} e */
+		const preventCloseTab = (e) => {
+			if (dirty) {
+				let canClose = confirm('You have unsaved changes. Do you want to close the tab?');
+				if (!canClose) e.preventDefault();
+			}
+		};
+		window.addEventListener('keydown', ctrlS);
+		window.addEventListener('beforeunload', preventCloseTab);
+
+		return () => {
+			window.removeEventListener('keydown', ctrlS);
+			window.removeEventListener('beforeunload', preventCloseTab);
+		};
 	});
 
 	const componentsMap = {
@@ -39,7 +67,7 @@
 			language: 'JavaScript'
 		};
 		entry.blocks = [...entry.blocks.slice(0, index), newBlock, ...entry.blocks.slice(index)];
-		dispatch('update', entry);
+		dirty = true;
 	};
 
 	/** @param {number} index */
@@ -52,7 +80,7 @@
 			content: ''
 		};
 		entry.blocks = [...entry.blocks.slice(0, index), newBlock, ...entry.blocks.slice(index)];
-		dispatch('update', entry);
+		dirty = true;
 	};
 
 	/** @param {number} index */
@@ -63,7 +91,7 @@
 			entry.blocks[index - 1],
 			...entry.blocks.slice(index + 1)
 		];
-		dispatch('update', entry);
+		dirty = true;
 	};
 
 	/** @param {number} index */
@@ -74,41 +102,31 @@
 			entry.blocks[index],
 			...entry.blocks.slice(index + 2)
 		];
-		dispatch('update', entry);
+		dirty = true;
 	};
 
 	/** @param {string} id */
 	const onDeleteBlock = (id) => {
 		entry.blocks = entry.blocks.filter((block) => block.id !== id);
-		dispatch('update', entry);
+		dirty = true;
 	};
 
 	const onSave = () => {
-		dispatch('update', entry);
+		if (dirty) {
+			dirty = false;
+			dispatch('save');
+		}
 		goto(`/${entry.id}`);
 	};
 
 	const onDeleteEntry = async () => {
-		if (confirm('Are you sure you want to delete this entry?')) {
-			await deleteEntry(entry);
-			await goto('/');
-		}
+		await deleteEntry(entry);
+		await goto('/');
 	};
 
-	onMount(() => {
-		/** @param {KeyboardEvent} e */
-		const save = (e) => {
-			if (e.ctrlKey && e.key === 's' && !e.shiftKey && !e.altKey) {
-				e.preventDefault();
-				onSave();
-			}
-		};
-		window.addEventListener('keydown', save);
-
-		return () => {
-			window.removeEventListener('keydown', save);
-		};
-	});
+	const setDirty = () => {
+		dirty = true;
+	};
 </script>
 
 <main class="stack" class:editing={$editStore}>
@@ -121,18 +139,20 @@
 						type="text"
 						class="title-input"
 						bind:value={entry.title}
-						on:blur={() => dispatch('update', entry)}
+						on:input={setDirty}
 						placeholder="New Entry"
 					/>
-					<button class="button" data-type="primary" on:click={onSave}>Save</button>
+					<button class="button" data-type="primary" on:click={onSave}>
+						{dirty ? 'Save' : 'Preview'}
+					</button>
 				</div>
 			{:else}
 				<div class="space-between gap-3">
 					<h2>{entry.title || 'Untitled'}</h2>
-					<EntryOptionDropdown {entry} on:delete={onDeleteEntry} />
+					<EntryOptionDropdown {entry} on:delete={onDeleteEntry} on:dirty={setDirty} />
 				</div>
 			{/if}
-			<TagEdit {entry} />
+			<TagEdit {entry} on:dirty={setDirty} />
 		</header>
 	</BlockWrapper>
 	<!-- Prevents distortion when switching the edit mode -->
@@ -156,6 +176,7 @@
 						last={index === entry.blocks.length - 1}
 						on:moveup={() => onMoveUp(index)}
 						on:movedown={() => onMoveDown(index)}
+						on:dirty={setDirty}
 					/>
 				</BlockWrapper>
 				{#if $editStore}

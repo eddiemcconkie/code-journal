@@ -7,6 +7,7 @@
 	import { goto } from '$app/navigation';
 	import EllipsisIcon from '$lib/icons/EllipsisIcon.svelte';
 	import GroupSearchDropdown from './GroupSearchDropdown.svelte';
+	import Modal from './Modal.svelte';
 
 	/** @type {import('src/types').Entry} */
 	export let entry;
@@ -29,20 +30,15 @@
 			<GroupSearchDropdown {entry} />
 		</li>
 		<li>
-			<button on:click={() => dispatch('delete')}>
+			<!-- <button on:click={() => dispatch('delete')}>
 				<span class="space-between">Delete <TrashIcon /></span>
-			</button>
+			</button> -->
+			<Modal on:accept={() => dispatch('delete')}>
+				<span slot="trigger" class="space-between">Delete <TrashIcon /></span>
+				<svelte:fragment slot="content">
+					Are you sure you want to delete this entry?
+				</svelte:fragment>
+			</Modal>
 		</li>
 	</ul>
 </Dropdown>
-
-<!-- <style>
-	button {
-		width: 100%;
-	}
-	span {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-	}
-</style> -->

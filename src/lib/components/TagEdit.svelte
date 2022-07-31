@@ -5,11 +5,12 @@
 	import CloseIcon from '$lib/icons/CloseIcon.svelte';
 	import { tagStore } from '$lib/stores/tag';
 	import AddIcon from '$lib/icons/AddIcon.svelte';
+	import { createEventDispatcher } from 'svelte';
 
 	/** @type {import('src/types').Entry} */
 	export let entry;
 
-	// let newTag = '';
+	const dispatch = createEventDispatcher();
 
 	/** @param {{detail: string}} event */
 	const onAddTag = ({ detail: tag }) => {
@@ -21,11 +22,12 @@
 		if (!entry.tags.includes(formattedTag)) {
 			entry.tags = [...entry.tags, formattedTag];
 		}
-		// newTag = '';
+		dispatch('dirty');
 	};
 
 	const onDeleteTag = (/** @type {string} */ tag) => {
 		entry.tags = entry.tags.filter((t) => t !== tag);
+		dispatch('dirty');
 	};
 </script>
 
@@ -112,9 +114,5 @@
 		&:focus-visible {
 			background-color: var(--cyan-8);
 		}
-	}
-
-	input {
-		width: auto;
 	}
 </style>
