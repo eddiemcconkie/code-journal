@@ -1,8 +1,9 @@
 <script>
-	import { signOut } from '$lib/firebase/auth';
+	import { page } from '$app/stores';
 	import { userStore } from '$lib/stores/user';
-	import Dropdown from './Dropdown.svelte';
 	import MenuDropdown from './MenuDropdown.svelte';
+
+	page;
 </script>
 
 <header>
@@ -10,15 +11,14 @@
 		<h1>Code Journal</h1>
 		{#if $userStore}
 			<MenuDropdown />
-		{:else}
-			<a href="/">Log in</a>
+		{:else if $page.url.pathname !== '/'}
+			<a href="/">Sign in</a>
 		{/if}
 	</div>
 </header>
 
 <style lang="scss">
 	header {
-		// padding: 0.2rem 3rem;
 		color: $text-light;
 		background-color: var(--slate-dark);
 		box-shadow: var(--shadow-1);
